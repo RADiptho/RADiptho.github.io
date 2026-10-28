@@ -1,0 +1,48 @@
+name: Align Home social links horizontally
+on:
+  push:
+    paths:
+      - '.github/workflows/home-horizontal-links.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix-layout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set responsive Home layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css="""
+          /* Home: portrait and biography side-by-side; social links in one row underneath */
+          @media (min-width: 861px) {
+            .home-grid { grid-template-columns: minmax(190px, 24%) minmax(0, 1fr) !important; gap: clamp(12px, 2vw, 28px) !important; }
+            .home-grid > div:first-child { display: contents !important; }
+            .home-grid .photo { grid-column: 1; grid-row: 1; width: 100%; max-width: 100%; max-height: min(42vh, 360px); object-fit: contain; }
+            .home-grid .about { grid-column: 2; grid-row: 1; min-width: 0; }
+            .home-grid .links { grid-column: 1 / -1; grid-row: 2; display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 8px; margin-top: 0; min-width: 0; width: 100%; }
+            .home-grid .links a { min-width: 0; width: 100%; max-width: 100%; justify-content: center; box-sizing: border-box; font-size: clamp(.68rem, .9vw, .82rem); padding-inline: 5px; }
+          }
+          @media (max-width: 860px) {
+            .home-grid .links { display: flex !important; flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; }
+            .home-grid .links a { width: auto; max-width: 100%; }
+          }
+          """
+          marker='/* HOME_HORIZONTAL_SOCIAL_FIX_V2 */'
+          if marker not in s:
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit layout
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Keep Home social links in a horizontal row without overlap"
+            git push
+          fi
