@@ -53,3 +53,15 @@ html body .banner.p-research .banner-title h1 {
   color: #fff !important;
   text-shadow: 0 2px 12px rgba(0,0,0,.7) !important;
 }
+
+/* site-motion-restored: smooth page transitions and subtle image entrance */
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:no-preference){
+ .view.active .page img,.view[style*="display: block"] .page img{animation:site-image-enter .85s ease-out both}
+ .view.active .page h1,.view.active .page h2,.view.active .page h3{animation:site-heading-enter .65s ease-out both}
+ .view img{transition:transform .5s ease,filter .5s ease}
+ .view img:hover{transform:translateY(-3px);filter:brightness(1.025)}
+ @keyframes site-image-enter{from{opacity:.65;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes site-heading-enter{from{opacity:.6;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.view img{animation:none!important;transition:none!important}}
