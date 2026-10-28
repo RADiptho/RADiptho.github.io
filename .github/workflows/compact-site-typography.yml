@@ -1,0 +1,63 @@
+name: Compact typography across entire website
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/compact-site-typography.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply compact consistent typography
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* SITEWIDE_COMPACT_TYPOGRAPHY_2026 */'
+          css=r"""
+          /* Consistent compact typography, without modifying images or animations. */
+          html { font-size: 14px !important; }
+          body { font-size: 14px !important; line-height: 1.55 !important; }
+          main, main p, main li, main dd, main dt, main td, main th,
+          section p, section li, article p, article li {
+            font-size: 14px !important;
+            line-height: 1.55 !important;
+          }
+          main li, section li { margin-bottom: 5px; }
+          main h1, section h1 { font-size: clamp(23px, 2.1vw, 29px) !important; line-height: 1.22 !important; }
+          main h2, section h2 { font-size: clamp(20px, 1.75vw, 25px) !important; line-height: 1.25 !important; }
+          main h3, section h3 { font-size: 17px !important; line-height: 1.3 !important; }
+          main h4, section h4 { font-size: 15px !important; }
+          nav a, header nav a { font-size: 13px !important; }
+          main a, section a, article a { font-size: inherit; }
+          main small, section small, main .muted, section .muted { font-size: 12px !important; }
+          @media (max-width: 700px) {
+            html, body { font-size: 13px !important; }
+            main p, main li, main dd, main dt, main td, main th,
+            section p, section li, article p, article li {
+              font-size: 13px !important; line-height: 1.55 !important;
+            }
+            main h1, section h1 { font-size: 23px !important; }
+            main h2, section h2 { font-size: 20px !important; }
+            main h3, section h3 { font-size: 16px !important; }
+          }
+          """
+          if marker not in s:
+            if '</style>' not in s:
+              raise RuntimeError('Expected inline stylesheet not found; no changes made')
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit typography changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Use compact consistent typography throughout website"
+            git push
+          fi
