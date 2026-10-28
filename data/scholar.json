@@ -1,0 +1,14 @@
+{
+  "profile": {
+    "user": "SSoTLJoAAAAJ",
+    "url": "https://scholar.google.com/citations?user=SSoTLJoAAAAJ"
+  },
+  "metrics": null,
+  "publications": [],
+  "publication_count": 0,
+  "last_success": null,
+  "last_attempt": null,
+  "status": "never_synced",
+  "error": null,
+  "source": "Google Scholar profile, scheduled daily through GitHub Actions (not real-time)"
+}
