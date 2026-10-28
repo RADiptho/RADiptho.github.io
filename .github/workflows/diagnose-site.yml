@@ -1,0 +1,32 @@
+name: Diagnose website source
+on:
+  push:
+    paths:
+      - '.github/workflows/diagnose-site.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          out=[]
+          for p in Path('.').rglob('*'):
+            if not p.is_file() or '.git' in p.parts or p.suffix.lower() not in {'.html','.js','.css','.json'}: continue
+            if p.stat().st_size>3000000: continue
+            s=p.read_text(errors='replace')
+            for pattern in [r'Google Scholar',r'Scholar publications',r'i10-index',r'CV',r'download',r'\.pdf',r'publications']:
+              matches=list(re.finditer(pattern,s,re.I))
+              for m in matches[:8]:
+                excerpt=s[max(0,m.start()-240):min(len(s),m.end()+300)].replace('\n',' ')
+                out.append(f'{p} [{pattern}] {excerpt}')
+          Path('site-diagnostic.txt').write_text('\n'.join(out)[:180000])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site-diagnostic.txt
+          git diff --cached --quiet || (git commit -m 'Capture website source diagnostic' && git push)
