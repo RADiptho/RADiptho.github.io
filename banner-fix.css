@@ -39,3 +39,17 @@ html body .banner.p-publications {
  background-repeat: no-repeat !important;
 }
 html body .banner.p-publications .banner-title h1 { color:#fff !important; text-shadow:0 2px 12px rgba(0,0,0,.75) !important; }
+
+/* Research & Expertise banner: uploaded image */
+html body header#banner.banner.p-research,
+html body #banner.p-research,
+html body .banner.p-research {
+  background-image: linear-gradient(90deg,rgba(0,0,0,.24),rgba(0,0,0,.08)),url("IMG_3282.jpeg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+html body .banner.p-research .banner-title h1 {
+  color: #fff !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.7) !important;
+}
