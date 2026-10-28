@@ -17,14 +17,14 @@
 
     // Real scroll-linked movement: the header image and site logo move as the page scrolls.
     const banner=document.querySelector('header#banner.banner');
-    const logo=document.querySelector('header#banner .site-name');
+    const logo=null; // Keep site name fixed; animate only banner image.
     let pending=false;
     function animateScroll(){
       pending=false;
       const y=Math.max(0,window.scrollY||window.pageYOffset||0);
       if(banner){
-        const travel=Math.min(y,700);
-        banner.style.setProperty('background-position','center calc(50% + '+(travel*.17).toFixed(1)+'px)','important');
+        const travel=Math.min(y,1000);
+        banner.style.setProperty('background-position','center calc(50% + '+(travel*.48).toFixed(1)+'px)','important');
       }
       if(logo){
         const shift=Math.min(y*.11,22);
