@@ -1,0 +1,30 @@
+/* Consistent page-banner typography; existing page images remain unchanged. */
+.banner:not(.home) .banner-title h1,
+.banner:not(.home) .banner-title h2,
+.banner:not(.home) .banner-title .title {
+  color: #fff !important;
+  font-size: clamp(34px, 5vw, 62px) !important;
+  line-height: 1.1 !important;
+  font-weight: 600 !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.72) !important;
+}
+.banner:not(.home) .banner-title .bar {
+  background: #0e8c57 !important;
+  height: 7px !important;
+}
+.banner.p-publications {
+  min-height: clamp(420px, 55vh, 550px) !important;
+  background-size: cover !important;
+  background-position-x: center !important;
+}
+.banner.p-publications .banner-title {
+  padding-bottom: 28px !important;
+}
+@media (max-width: 760px) {
+  .banner.p-publications { min-height: 320px !important; }
+  .banner:not(.home) .banner-title h1,
+  .banner:not(.home) .banner-title h2,
+  .banner:not(.home) .banner-title .title {
+    font-size: clamp(28px, 7vw, 44px) !important;
+  }
+}
