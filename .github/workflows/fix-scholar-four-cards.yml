@@ -1,0 +1,77 @@
+name: Fix Scholar four cards in one row
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-scholar-four-cards.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set precise four-column Scholar metrics layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- SCHOLAR_FOUR_EQUAL_CARDS_2026 -->'
+          snippet=r"""
+          <style>
+          .scholar-four-cards {
+            display:grid !important;
+            grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+            gap:10px !important;
+            width:100% !important;
+            align-items:stretch !important;
+          }
+          .scholar-four-cards > * {
+            min-width:0 !important;
+            width:100% !important;
+            max-width:none !important;
+            box-sizing:border-box !important;
+          }
+          @media(max-width:760px) {
+            .scholar-four-cards {grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+          }
+          @media(max-width:420px) {
+            .scholar-four-cards {grid-template-columns:1fr !important;}
+          }
+          </style>
+          <script>
+          (function(){
+            function apply(){
+              const labels=['Scholar publications (not synced)','Citations','h-index','i10-index'];
+              const leaves=[...document.querySelectorAll('body *')].filter(e=>e.children.length===0);
+              const matches=labels.map(t=>leaves.find(e=>e.textContent.trim()===t));
+              if(matches.some(x=>!x))return;
+              const parents=matches.map(e=>e.parentElement);
+              function ancestors(el){let arr=[];for(let n=el;n&&n!==document.body;n=n.parentElement)arr.push(n);return arr}
+              const common=ancestors(parents[0]).find(n=>parents.every(p=>n.contains(p)));
+              if(!common)return;
+              let grid=common;
+              // If the common ancestor is a large panel, find the direct card grid.
+              if(grid.children.length>8)return;
+              grid.classList.add('scholar-four-cards');
+            }
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(apply,1200));
+            else setTimeout(apply,1200);
+            document.addEventListener('click',()=>setTimeout(apply,350));
+          })();
+          </script>
+          """
+          if marker not in s:
+            s=s.replace('</body>',marker+snippet+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Align all four Scholar metric cards on one desktop row"
+            git push
+          fi
