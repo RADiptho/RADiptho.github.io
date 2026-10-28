@@ -788,73 +788,45 @@ footer .wrap { padding-block: 16px calc(22px + env(safe-area-inset-bottom, 0px))
   else {correctScholar();setTimeout(correctScholar,800)}
 })();
 </script>
-<!-- KEYBOARD_PARALLAX_SCROLL_2026 -->
-<style>
-  @media (prefers-reduced-motion: reduce) {
-    .parallax-keyboard { transform: none !important; }
-  }
-</style>
+
+
+<!-- PAGE_AWARE_SMOOTH_PARALLAX_2026 -->
 <script>
 (function(){
-  const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-  let hero, layer, frame=0;
-  function setup(){
-    if(prefersReduced.matches || window.innerWidth<700) return;
-    hero=[...document.querySelectorAll('header,.hero,.banner,.masthead')].find(el=>{
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let hero=null, target=0, current=0, ticking=false;
+  function findHero(){
+    return [...document.querySelectorAll('header,.hero,.banner,.masthead')].find(el=>{
       const cs=getComputedStyle(el);
       return cs.backgroundImage!=='none' && el.getBoundingClientRect().height>100;
     });
-    if(!hero || hero.dataset.parallaxReady) return;
-    const bg=getComputedStyle(hero).backgroundImage;
-    if(!bg || bg==='none') return;
-    hero.dataset.parallaxReady='1';
-    const currentPosition=getComputedStyle(hero).position;
-    if(currentPosition==='static') hero.style.position='relative';
-    hero.style.overflow='hidden';
-    layer=document.createElement('div');
-    layer.className='parallax-keyboard';
-    layer.setAttribute('aria-hidden','true');
-    layer.style.cssText='position:absolute;inset:-65px 0;pointer-events:none;z-index:0;background-image:'+bg+';background-size:cover;background-position:center center;will-change:transform;transform:translate3d(0,0,0);';
-    hero.style.backgroundImage='none';
-    hero.prepend(layer);
-    [...hero.children].filter(el=>el!==layer).forEach(el=>{
-      if(getComputedStyle(el).position==='static') el.style.position='relative';
-      el.style.zIndex='1';
-    });
-    function render(){
-      frame=0;
-      if(!layer)return;
-      const rect=hero.getBoundingClientRect();
-      const movement=Math.max(-60,Math.min(60,-rect.top*0.2));
-      layer.style.transform='translate3d(0,'+movement.toFixed(1)+'px,0)';
+  }
+  function animate(){
+    ticking=false;
+    if(innerWidth<700) return;
+    const next=findHero();
+    if(next!==hero){
+      if(hero) hero.style.removeProperty('background-position-y');
+      hero=next;
+      current=0;
     }
-    function schedule(){if(!frame)frame=requestAnimationFrame(render)}
-    window.addEventListener('scroll',schedule,{passive:true});
-    window.addEventListener('resize',schedule,{passive:true});
-    render();
+    if(!hero)return;
+    target=Math.max(-35,Math.min(35,scrollY*0.12));
+    current+=(target-current)*0.15;
+    hero.style.backgroundPositionY='calc(50% + '+current.toFixed(2)+'px)';
+    if(Math.abs(target-current)>0.15) request();
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
-  else setup();
-})();
-</script>
-<!-- SMOOTH_PARALLAX_EASING_2026 -->
-<script>
-(function(){
-  let target=0, current=0, raf=0, last=0;
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  function init(){
-    const layer=document.querySelector('.parallax-keyboard');
-    if(!layer || reduce.matches) return;
-    // Replace previous scroll listener's movement with eased CSS transforms.
-    // Existing listener still sets transform, so a transition smooths those updates.
-    layer.style.transition='transform 220ms cubic-bezier(.22,.61,.36,1)';
-    layer.style.backfaceVisibility='hidden';
-    layer.style.transformOrigin='center';
-    layer.style.contain='paint';
-    layer.style.willChange='transform';
+  function request(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(animate);
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
-  else init();
+  addEventListener('scroll',request,{passive:true});
+  addEventListener('resize',request,{passive:true});
+  // Observe page navigation / header style changes, without freezing images.
+  const observer=new MutationObserver(request);
+  observer.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class']});
+  request();
 })();
 </script>
 </body></html>
