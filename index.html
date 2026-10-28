@@ -837,4 +837,24 @@ footer .wrap { padding-block: 16px calc(22px + env(safe-area-inset-bottom, 0px))
   else setup();
 })();
 </script>
+<!-- SMOOTH_PARALLAX_EASING_2026 -->
+<script>
+(function(){
+  let target=0, current=0, raf=0, last=0;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  function init(){
+    const layer=document.querySelector('.parallax-keyboard');
+    if(!layer || reduce.matches) return;
+    // Replace previous scroll listener's movement with eased CSS transforms.
+    // Existing listener still sets transform, so a transition smooths those updates.
+    layer.style.transition='transform 220ms cubic-bezier(.22,.61,.36,1)';
+    layer.style.backfaceVisibility='hidden';
+    layer.style.transformOrigin='center';
+    layer.style.contain='paint';
+    layer.style.willChange='transform';
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
 </body></html>
