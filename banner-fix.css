@@ -28,22 +28,3 @@
     font-size: clamp(28px, 7vw, 44px) !important;
   }
 }
-
-/* Publication page: show the full first-page artwork instead of cropping it. */
-.banner.p-publications {
-  min-height: clamp(500px, 72vh, 720px) !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center top !important;
-  background-color: #2c2927 !important;
-}
-.banner.p-publications .banner-title {
-  min-height: inherit !important;
-}
-@media (max-width: 760px) {
-  .banner.p-publications {
-    min-height: clamp(360px, 62vh, 520px) !important;
-    background-size: contain !important;
-    background-position: center top !important;
-  }
-}
