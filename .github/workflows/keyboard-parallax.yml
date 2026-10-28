@@ -1,0 +1,83 @@
+name: Add smooth keyboard parallax scrolling
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/keyboard-parallax.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add safe scroll-driven keyboard parallax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- KEYBOARD_PARALLAX_SCROLL_2026 -->'
+          script=r"""
+          <style>
+            @media (prefers-reduced-motion: reduce) {
+              .parallax-keyboard { transform: none !important; }
+            }
+          </style>
+          <script>
+          (function(){
+            const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+            let hero, layer, frame=0;
+            function setup(){
+              if(prefersReduced.matches || window.innerWidth<700) return;
+              hero=[...document.querySelectorAll('header,.hero,.banner,.masthead')].find(el=>{
+                const cs=getComputedStyle(el);
+                return cs.backgroundImage!=='none' && el.getBoundingClientRect().height>100;
+              });
+              if(!hero || hero.dataset.parallaxReady) return;
+              const bg=getComputedStyle(hero).backgroundImage;
+              if(!bg || bg==='none') return;
+              hero.dataset.parallaxReady='1';
+              const currentPosition=getComputedStyle(hero).position;
+              if(currentPosition==='static') hero.style.position='relative';
+              hero.style.overflow='hidden';
+              layer=document.createElement('div');
+              layer.className='parallax-keyboard';
+              layer.setAttribute('aria-hidden','true');
+              layer.style.cssText='position:absolute;inset:-65px 0;pointer-events:none;z-index:0;background-image:'+bg+';background-size:cover;background-position:center center;will-change:transform;transform:translate3d(0,0,0);';
+              hero.style.backgroundImage='none';
+              hero.prepend(layer);
+              [...hero.children].filter(el=>el!==layer).forEach(el=>{
+                if(getComputedStyle(el).position==='static') el.style.position='relative';
+                el.style.zIndex='1';
+              });
+              function render(){
+                frame=0;
+                if(!layer)return;
+                const rect=hero.getBoundingClientRect();
+                const movement=Math.max(-60,Math.min(60,-rect.top*0.2));
+                layer.style.transform='translate3d(0,'+movement.toFixed(1)+'px,0)';
+              }
+              function schedule(){if(!frame)frame=requestAnimationFrame(render)}
+              window.addEventListener('scroll',schedule,{passive:true});
+              window.addEventListener('resize',schedule,{passive:true});
+              render();
+            }
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);
+            else setup();
+          })();
+          </script>
+          """
+          if marker not in s:
+            s=s.replace('</body>',marker+script+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Add smooth keyboard banner parallax on desktop scroll"
+            git push
+          fi
