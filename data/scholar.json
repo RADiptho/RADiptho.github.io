@@ -3,12 +3,28 @@
     "user": "SSoTLJoAAAAJ",
     "url": "https://scholar.google.com/citations?user=SSoTLJoAAAAJ"
   },
-  "metrics": null,
+  "metrics": {
+    "citations": {
+      "all": 22,
+      "recent": 22
+    },
+    "h_index": {
+      "all": 2,
+      "recent": 2
+    },
+    "i10_index": {
+      "all": 1,
+      "recent": 1
+    },
+    "recent_since": 2021
+  },
   "publications": [],
   "publication_count": 0,
   "last_success": null,
   "last_attempt": "2026-10-28T12:57:04Z",
-  "status": "never_synced",
-  "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
-  "source": "Google Scholar profile, scheduled daily through GitHub Actions (not real-time)"
+  "status": "manual_verified",
+  "error": "Automatic Google Scholar sync blocked (HTTP 403); displayed metrics manually verified",
+  "source": "Google Scholar profile screenshot, manually verified 2026-10-28 (not live)",
+  "last_verified": "2026-10-28",
+  "verification_method": "User-provided screenshot of Google Scholar profile"
 }
