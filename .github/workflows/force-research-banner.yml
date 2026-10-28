@@ -1,0 +1,38 @@
+name: Force Research banner cache refresh
+on:
+  push:
+    paths:
+      - '.github/workflows/force-research-banner.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch actual HTML and bust CSS cache
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          assert Path('IMG_3282.jpeg').is_file()
+          css="""<style id="research-banner-20261028">
+          html body #banner.banner.p-research, html body header.banner.p-research, html body .banner.p-research {
+            background: linear-gradient(90deg,rgba(0,0,0,.22),rgba(0,0,0,.06)),url('IMG_3282.jpeg?v=3') center center / cover no-repeat !important;
+          }
+          html body .banner.p-research .banner-title h1 {color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.7)!important}
+          </style>"""
+          assert '</head>' in s
+          if 'id="research-banner-20261028"' not in s:
+              s=s.replace('</head>',css+'\n</head>',1)
+          s=s.replace('banner-fix.css?v=20261028','banner-fix.css?v=20261028research3')
+          p.write_text(s)
+          print('Research banner style injected; CSS cache refreshed.')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Force Research banner image and cache refresh' && git push)
