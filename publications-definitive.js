@@ -56,7 +56,7 @@
     title.style.setProperty('text-align','center','important');
   }
 
-  function apply(){ if(!isPub()) return; removeScholar(); fullPageHero(); }
+  function apply(){ if(!isPub()) return; fullPageHero(); }
   const run=()=>{apply();setTimeout(apply,150);setTimeout(apply,600);setTimeout(apply,1400)};
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
   addEventListener('hashchange',run);
