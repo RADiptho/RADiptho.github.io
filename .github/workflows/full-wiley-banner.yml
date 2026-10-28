@@ -1,0 +1,44 @@
+name: Show full Wiley publication first page
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add publication banner fit override
+        shell: bash
+        run: |
+          cat >> banner-fix.css <<'CSS'
+
+          /* Publication page: show the full first-page artwork instead of cropping it. */
+          .banner.p-publications {
+            min-height: clamp(500px, 72vh, 720px) !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center top !important;
+            background-color: #2c2927 !important;
+          }
+          .banner.p-publications .banner-title {
+            min-height: inherit !important;
+          }
+          @media (max-width: 760px) {
+            .banner.p-publications {
+              min-height: clamp(360px, 62vh, 520px) !important;
+              background-size: contain !important;
+              background-position: center top !important;
+            }
+          }
+          CSS
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add banner-fix.css
+          if ! git diff --cached --quiet; then
+            git commit -m "Show full Wiley first page in Publications banner"
+            git push
+          fi
