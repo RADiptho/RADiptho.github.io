@@ -1,0 +1,65 @@
+name: Runtime fix Wiley banner and Scholar publication count
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add DOM-aware fixes
+        shell: bash
+        run: |
+          cat > runtime-fixes.js <<'JS'
+          (function(){
+            function textLeaves(root=document){
+              return [...root.querySelectorAll('*')].filter(e=>e.children.length===0);
+            }
+            function fixScholar(){
+              const leaf=textLeaves().find(e=>e.textContent.trim()==='Scholar publications (not synced)');
+              if(!leaf)return;
+              const card=leaf.parentElement;
+              if(!card)return;
+              const value=[...card.querySelectorAll('*')].find(e=>e.children.length===0 && ['—','0'].includes(e.textContent.trim()));
+              // Keep unknown count honest until a verified count is available.
+              if(value)value.textContent='—';
+              leaf.textContent='Scholar publications';
+            }
+            function fixPublicationsBanner(){
+              const nav=[...document.querySelectorAll('a,button')].find(e=>e.textContent.trim()==='Publications');
+              const candidates=[...document.querySelectorAll('header,section,div')].filter(el=>{
+                const cs=getComputedStyle(el);
+                return cs.backgroundImage && cs.backgroundImage!=='none' && el.getBoundingClientRect().height>180;
+              });
+              // On Publications view, use the largest visible background region above the content.
+              const hero=candidates.sort((a,b)=>b.getBoundingClientRect().height-a.getBoundingClientRect().height)[0];
+              if(!hero)return;
+              const pageText=document.body.innerText;
+              if(!pageText.includes('Journal Articles:') && !pageText.includes('Newest first. Author names as published'))return;
+              hero.style.setProperty('background-size','contain','important');
+              hero.style.setProperty('background-repeat','no-repeat','important');
+              hero.style.setProperty('background-position','center top','important');
+              hero.style.setProperty('min-height','min(78vh,760px)','important');
+              hero.style.setProperty('background-color','#2b2927','important');
+            }
+            function apply(){fixScholar();fixPublicationsBanner()}
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(apply,500));
+            else setTimeout(apply,500);
+            document.addEventListener('click',()=>setTimeout(apply,250));
+            addEventListener('hashchange',()=>setTimeout(apply,250));
+          })();
+          JS
+          if ! grep -q 'runtime-fixes.js' index.html; then
+            sed -i 's#</body>#<script src="runtime-fixes.js?v=20261028b"></script>\n</body>#' index.html
+          fi
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html runtime-fixes.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Apply DOM-aware Publications banner and Scholar card fixes"
+            git push
+          fi
