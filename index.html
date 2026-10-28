@@ -22,6 +22,20 @@
 @media (max-width: 600px) {
   #research, #research p, #research li { font-size: 13px !important; line-height: 1.55 !important; }
 }
+/* HOME_VIEWPORT_FIT_2026 */
+@media (min-width: 861px) {
+  #home { box-sizing: border-box; }
+  #home .home-grid { grid-template-columns: minmax(160px, 20%) minmax(0, 1fr) !important; column-gap: clamp(14px, 2vw, 28px) !important; row-gap: 8px !important; align-items: start !important; }
+  #home .home-grid .photo { max-height: min(35vh, 290px) !important; width: 100% !important; object-fit: contain !important; }
+  #home .home-grid .about { min-width: 0 !important; }
+  #home .home-grid .about p { font-size: clamp(11px, .91vw, 13px) !important; line-height: 1.4 !important; margin: 5px 0 8px !important; }
+  #home .home-grid .about h1, #home .home-grid .about h2 { margin-top: 0 !important; margin-bottom: 4px !important; }
+  #home .home-grid .links { display: grid !important; grid-template-columns: repeat(5,minmax(0,1fr)) !important; grid-column: 1/-1 !important; gap: 8px !important; margin-top: 3px !important; }
+  #home .home-grid .links a { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; white-space: nowrap !important; font-size: 12px !important; padding: 6px 5px !important; justify-content: center !important; }
+}
+@media (max-width: 860px) {
+  #home .home-grid .links { display: flex !important; flex-wrap: wrap !important; gap: 7px !important; }
+}
 </style></head><body><title>Md. Rakib Ahammed Diptho</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Md. Rakib Ahammed Diptho, Research Assistant, Department of Computer Science and Engineering, Jahangirnagar University: research, publications, CV, service and contact.">
