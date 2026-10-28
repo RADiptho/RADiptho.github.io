@@ -1,0 +1,82 @@
+name: Restore original per-page header imagery
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/restore-page-headers.yml'
+permissions:
+  contents: write
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove frozen image overlay and keep smooth parallax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          # Previous parallax captured one header image at startup, hid the
+          # original image, and did not update when page navigation changed it.
+          for marker in ['<!-- KEYBOARD_PARALLAX_SCROLL_2026 -->','<!-- SMOOTH_PARALLAX_EASING_2026 -->']:
+              pattern=re.escape(marker)+r'\s*(?:<style>[\s\S]*?</style>\s*)?<script>[\s\S]*?</script>'
+              s,n=re.subn(pattern,'',s,count=1)
+              print(marker,'removed:',n)
+          marker='<!-- PAGE_AWARE_SMOOTH_PARALLAX_2026 -->'
+          js=r"""
+          <script>
+          (function(){
+            if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let hero=null, target=0, current=0, ticking=false;
+            function findHero(){
+              return [...document.querySelectorAll('header,.hero,.banner,.masthead')].find(el=>{
+                const cs=getComputedStyle(el);
+                return cs.backgroundImage!=='none' && el.getBoundingClientRect().height>100;
+              });
+            }
+            function animate(){
+              ticking=false;
+              if(innerWidth<700) return;
+              const next=findHero();
+              if(next!==hero){
+                if(hero) hero.style.removeProperty('background-position-y');
+                hero=next;
+                current=0;
+              }
+              if(!hero)return;
+              target=Math.max(-35,Math.min(35,scrollY*0.12));
+              current+=(target-current)*0.15;
+              hero.style.backgroundPositionY='calc(50% + '+current.toFixed(2)+'px)';
+              if(Math.abs(target-current)>0.15) request();
+            }
+            function request(){
+              if(ticking)return;
+              ticking=true;
+              requestAnimationFrame(animate);
+            }
+            addEventListener('scroll',request,{passive:true});
+            addEventListener('resize',request,{passive:true});
+            // Observe page navigation / header style changes, without freezing images.
+            const observer=new MutationObserver(request);
+            observer.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class','style']});
+            request();
+          })();
+          </script>
+          """
+          # Avoid recursive mutation loop: background-position style is a style mutation.
+          js=js.replace("attributeFilter:['class','style']","attributeFilter:['class']")
+          if marker not in s:
+              s=s.replace('</body>',marker+js+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit restored page imagery behavior
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Restore distinct per-page backgrounds with smooth page-aware parallax"
+            git push
+          fi
