@@ -1,9 +1,6 @@
 name: Fix publication banner and consistent heading colors
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/banner-color-consistency.yml'
 permissions:
   contents: write
 jobs:
@@ -11,56 +8,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Correct banner proportions and typography
+      - name: Add safe banner override stylesheet
+        shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          marker='/* BANNER_CONSISTENT_COLORS_AND_PUBLICATION_FIT_2026 */'
-          css=r"""
-          /* Preserve each existing p-* background image and smooth parallax. */
-          .banner:not(.home) .banner-title h1 {
-            color:#fff !important;
-            font-family:var(--font-title) !important;
-            font-size:clamp(34px,5.1vw,64px) !important;
-            font-weight:500 !important;
-            line-height:1.12 !important;
-            text-shadow:0 2px 12px rgba(0,0,0,.75) !important;
+          cat > banner-fix.css <<'CSS'
+          /* Consistent page-banner typography; existing page images remain unchanged. */
+          .banner:not(.home) .banner-title h1,
+          .banner:not(.home) .banner-title h2,
+          .banner:not(.home) .banner-title .title {
+            color: #fff !important;
+            font-size: clamp(34px, 5vw, 62px) !important;
+            line-height: 1.1 !important;
+            font-weight: 600 !important;
+            text-shadow: 0 2px 12px rgba(0,0,0,.72) !important;
           }
           .banner:not(.home) .banner-title .bar {
-            background:#0e8c57 !important;
-            height:8px !important;
-            width:min(740px,82%) !important;
+            background: #0e8c57 !important;
+            height: 7px !important;
           }
           .banner.p-publications {
-            min-height:clamp(420px,54vh,540px) !important;
-            background-size:cover;
-            background-position-x:center;
-            background-position-y:62%;
+            min-height: clamp(420px, 55vh, 550px) !important;
+            background-size: cover !important;
+            background-position-x: center !important;
           }
           .banner.p-publications .banner-title {
-            padding-bottom:28px !important;
+            padding-bottom: 28px !important;
           }
-          @media(max-width:760px) {
-            .banner.p-publications {min-height:320px !important;}
-            .banner:not(.home) .banner-title h1 {font-size:clamp(28px,7vw,44px) !important;}
+          @media (max-width: 760px) {
+            .banner.p-publications { min-height: 320px !important; }
+            .banner:not(.home) .banner-title h1,
+            .banner:not(.home) .banner-title h2,
+            .banner:not(.home) .banner-title .title {
+              font-size: clamp(28px, 7vw, 44px) !important;
+            }
           }
-          """
-          if marker not in s:
-            if '</style>' in s:
-            s=s.replace('</style>',marker+css+'</style>',1)
-          elif '</head>' in s:
-            s=s.replace('</head>','<style>'+marker+css+'</style></head>',1)
-          else:
-            raise RuntimeError('No safe insertion point found')
-          p.write_text(s,encoding='utf-8')
-          PY
+          CSS
+          if ! grep -q 'banner-fix.css' index.html; then
+            sed -i 's#</head>#<link rel="stylesheet" href="banner-fix.css?v=20261028">\n</head>#' index.html
+          fi
       - name: Commit changes
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html banner-fix.css
           if ! git diff --cached --quiet; then
-            git commit -m "Improve publication banner visibility and standardize heading accents"
+            git commit -m "Fix page banner sizing and consistent heading colors"
             git push
+          fi
