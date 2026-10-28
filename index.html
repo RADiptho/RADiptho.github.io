@@ -702,4 +702,45 @@ footer .wrap { padding-block: 16px calc(22px + env(safe-area-inset-bottom, 0px))
   } catch(e) { console.warn('Scholar status unavailable',e); }
 })();
 </script>
+<!-- VERIFIED_SCHOLAR_METRICS_RENDERER_2026 -->
+<script>
+(async function(){
+  try {
+    const res=await fetch('data/scholar.json?ts='+Date.now(),{cache:'no-store'});
+    if(!res.ok) return;
+    const d=await res.json();
+    if(!d.metrics || !d.last_verified || d.status==='ok') return;
+    const nodes=[...document.querySelectorAll('p,div,span')];
+    const el=nodes.find(e=>e.children.length<3 && (
+      e.textContent.includes('Google Scholar metrics have not been synchronized yet') ||
+      e.textContent.includes('Google Scholar metrics are temporarily unavailable')
+    ));
+    if(!el) return;
+    const m=d.metrics;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;flex-wrap:wrap;gap:12px;margin:10px 0';
+    [['Citations',m.citations?.all],['h-index',m.h_index?.all],['i10-index',m.i10_index?.all]].forEach(([label,val])=>{
+      if(val==null)return;
+      const item=document.createElement('div');
+      item.style.cssText='border:1px solid #dce4ec;border-radius:10px;padding:10px 18px;min-width:110px;text-align:center;background:#fff';
+      const value=document.createElement('strong');
+      value.textContent=String(val);
+      value.style.cssText='display:block;font-size:24px;color:#10365a';
+      const name=document.createElement('span');
+      name.textContent=label;
+      name.style.cssText='font-size:13px';
+      item.append(value,name);row.appendChild(item);
+    });
+    const note=document.createElement('div');
+    note.style.cssText='font-size:12px;color:#58677a;margin-top:7px';
+    note.textContent='Source: Google Scholar screenshot, verified '+d.last_verified+'. Manually verified; not live. Automatic sync currently blocked.';
+    const link=document.createElement('a');
+    link.href=d.profile?.url||'https://scholar.google.com/citations?user=SSoTLJoAAAAJ';
+    link.target='_blank';link.rel='noopener noreferrer';
+    link.textContent=' View profile.';
+    note.appendChild(link);
+    el.replaceChildren(row,note);
+  } catch(e) { console.warn('Verified Scholar metrics unavailable',e); }
+})();
+</script>
 </body></html>
