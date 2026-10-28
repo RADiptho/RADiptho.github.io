@@ -1,0 +1,43 @@
+name: Apply Publications book banner
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-publications-banner.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          assert Path('IMG_3281.jpeg').exists(), 'Uploaded banner not found'
+          p=Path('index.html')
+          s=p.read_text()
+          # Replace only Publications hero image references, not article entries.
+          s=s.replace('Wiley-Style Mango Disease Research Article.png','IMG_3281.jpeg')
+          s=s.replace('Wiley_article_first_page_2x.png','IMG_3281.jpeg')
+          # Force a consistent banner background on the publications page hero, without touching publication data.
+          css="""<style id="publications-book-banner">
+          #publications .hero, #publications .page-hero, #publications .hero-banner,
+          .publications-hero, .pub-hero {
+            background-image:linear-gradient(90deg,rgba(0,0,0,.45),rgba(0,0,0,.12)),url('IMG_3281.jpeg')!important;
+            background-position:center!important;background-size:cover!important;
+          }
+          </style>"""
+          if 'id="publications-book-banner"' not in s:
+              s=s.replace('</head>',css+'\n</head>',1)
+          p.write_text(s)
+          # Disable obsolete hero manipulation helpers; leave all publication cards intact.
+          for name in ['publications-fullwidth.js','publications-definitive.js','publications-final-fix.js']:
+              f=Path(name)
+              if f.exists():
+                  f.write_text('// Superseded by the Publications book banner.\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html publications-fullwidth.js publications-definitive.js publications-final-fix.js
+          git diff --cached --quiet || (git commit -m 'Use uploaded book image for Publications hero' && git push)
