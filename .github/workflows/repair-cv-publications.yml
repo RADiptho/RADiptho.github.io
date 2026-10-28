@@ -1,0 +1,47 @@
+name: Repair CV preview and Publications
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-cv-publications.yml'
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text()
+          before=s
+          # Never delete the actual publication cards.
+          # Disable previously added DOM-deletion helpers that can remove a parent section.
+          unsafe=['publications-final-fix.js','scholar-force-remove.js','remove-scholar-robust.js','scholar-auto-repair.js','publications-definitive.js']
+          for f in unsafe:
+              s=re.sub(r'<script\b(?=[^>]*\bsrc=["\'][^"\']*'+re.escape(f)+r'[^"\']*["\'])[^>]*>\s*</script>', '', s, flags=re.I)
+          # Remove only the Scholar metrics panel from display, preserving Scholar profile links elsewhere.
+          if 'id="hide-scholar-panel-safely"' not in s:
+              s=s.replace('</head>','<style id="hide-scholar-panel-safely">.scholar{display:none!important}</style>\n</head>',1)
+          # Let browsers open CV PDFs instead of forcing a download.
+          def fix_anchor(m):
+              tag=m.group(0)
+              if not re.search(r'\bhref\s*=\s*["\'][^"\']+\.pdf(?:\?[^"\']*)?["\']',tag,re.I):
+                  return tag
+              tag=re.sub(r'\s+download(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+))?', '',tag,flags=re.I)
+              if not re.search(r'\btarget\s*=',tag,re.I):
+                  tag=tag[:-1]+' target="_blank">'
+              return tag
+          s=re.sub(r'<a\b[^>]*>',fix_anchor,s,flags=re.I)
+          assert 'id="scholarHeading"' in s, 'Unexpected source, aborting'
+          assert len(s)>50000, 'Unexpectedly small HTML, aborting'
+          p.write_text(s)
+          print('HTML length:',len(s),'Changed:',s!=before)
+          print('Remaining unsafe external scripts:',[f for f in unsafe if re.search(r'<script[^>]+src=["\'][^"\']*'+re.escape(f),s,re.I)])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Repair CV PDF preview and preserve Publications' && git push)
