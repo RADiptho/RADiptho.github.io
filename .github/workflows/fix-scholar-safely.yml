@@ -1,0 +1,29 @@
+name: Fix Scholar panel safely
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-scholar-safely.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          assert 'class="scholar"' in s or "class='scholar'" in s, 'Scholar panel not found'
+          css='<style id="hide-scholar-panel-safely">.scholar{display:none!important}</style>'
+          if 'hide-scholar-panel-safely' not in s:
+            s=s.replace('</head>',css+'\n</head>',1)
+          assert 'hide-scholar-panel-safely' in s
+          p.write_text(s)
+          print('Added targeted CSS only; Publications cards remain unchanged')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Hide only Scholar metrics panel without touching publications' && git push)
