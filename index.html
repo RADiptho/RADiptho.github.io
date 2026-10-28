@@ -679,4 +679,27 @@ footer .wrap { padding-block: 16px calc(22px + env(safe-area-inset-bottom, 0px))
 
 })();
 </script>
+<!-- SCHOLAR_SYNC_STATUS_FIX_2026 -->
+<script>
+(async function(){
+  try {
+    const response = await fetch('data/scholar.json?ts=' + Date.now(), {cache:'no-store'});
+    if (!response.ok) return;
+    const data = await response.json();
+    if (data.metrics || !data.last_attempt || !data.error) return;
+    const candidates = [...document.querySelectorAll('p,div,span')];
+    const el = candidates.find(e => e.children.length < 3 && e.textContent.includes('Google Scholar metrics have not been synchronized yet'));
+    if (!el) return;
+    const when = new Date(data.last_attempt).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});
+    const text = document.createTextNode('Google Scholar metrics are temporarily unavailable because Google Scholar blocked the automated request (HTTP 403). Last attempted: ' + when + '. ');
+    el.replaceChildren(text);
+    const a=document.createElement('a');
+    a.href=data.profile?.url || 'https://scholar.google.com/citations?user=SSoTLJoAAAAJ';
+    a.target='_blank';
+    a.rel='noopener noreferrer';
+    a.textContent='View Google Scholar profile.';
+    el.appendChild(a);
+  } catch(e) { console.warn('Scholar status unavailable',e); }
+})();
+</script>
 </body></html>
