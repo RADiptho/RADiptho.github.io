@@ -1,0 +1,53 @@
+name: Use exact Wiley image on Publications hero
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Publications hero image override
+        shell: bash
+        run: |
+          cat > exact-wiley-hero.js <<'JS'
+          (function(){
+            const IMG='Wiley_article_first_page_2x.png';
+            function isPublications(){
+              return document.body.innerText.includes('Journal Articles:') ||
+                     document.body.innerText.includes('Newest first. Author names as published');
+            }
+            function apply(){
+              if(!isPublications()) return;
+              const candidates=[...document.querySelectorAll('header,section,div')].filter(el=>{
+                const r=el.getBoundingClientRect(), cs=getComputedStyle(el);
+                return r.height>180 && r.top<500 && cs.backgroundImage!=='none';
+              }).sort((a,b)=>b.getBoundingClientRect().height-a.getBoundingClientRect().height);
+              const hero=candidates[0];
+              if(!hero)return;
+              hero.style.setProperty('background-image','url("'+IMG+'")','important');
+              hero.style.setProperty('background-size','contain','important');
+              hero.style.setProperty('background-repeat','no-repeat','important');
+              hero.style.setProperty('background-position','center top','important');
+              hero.style.setProperty('background-color','#292725','important');
+              hero.style.setProperty('min-height','min(78vh,760px)','important');
+            }
+            function schedule(){setTimeout(apply,100)}
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule); else schedule();
+            document.addEventListener('click',()=>setTimeout(apply,180));
+            addEventListener('hashchange',()=>setTimeout(apply,180));
+          })();
+          JS
+          sed -i '/runtime-fixes\.js/d;/exact-wiley-hero\.js/d' index.html
+          sed -i 's#</body>#<script src="exact-wiley-hero.js?v=20261028c"></script>\n</body>#' index.html
+      - name: Commit exact Wiley hero
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html exact-wiley-hero.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Use uploaded Wiley first page as exact Publications hero"
+            git push
+          fi
