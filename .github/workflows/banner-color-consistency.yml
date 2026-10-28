@@ -48,8 +48,12 @@ jobs:
           }
           """
           if marker not in s:
-            if '</style>' not in s: raise RuntimeError('Missing CSS style tag')
+            if '</style>' in s:
             s=s.replace('</style>',marker+css+'</style>',1)
+          elif '</head>' in s:
+            s=s.replace('</head>','<style>'+marker+css+'</style></head>',1)
+          else:
+            raise RuntimeError('No safe insertion point found')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit changes
