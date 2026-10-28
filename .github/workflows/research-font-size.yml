@@ -1,0 +1,44 @@
+name: Reduce research section font size
+on:
+  push:
+    paths:
+      - '.github/workflows/research-font-size.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add compact typography for research section
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* RESEARCH_TYPOGRAPHY_COMPACT_2026 */'
+          css="""
+          #research, #research p, #research li { font-size: 14px !important; line-height: 1.65 !important; }
+          #research li { margin-bottom: 5px !important; }
+          #research strong, #research b { font-size: inherit !important; }
+          #research h2 { font-size: clamp(22px, 2vw, 28px) !important; }
+          #research h3 { font-size: 16px !important; }
+          #research a { font-size: 13px !important; }
+          @media (max-width: 600px) {
+            #research, #research p, #research li { font-size: 13px !important; line-height: 1.55 !important; }
+          }
+          """
+          if marker not in s:
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Reduce Research section text size for cleaner layout"
+            git push
+          fi
