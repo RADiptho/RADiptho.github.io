@@ -1,0 +1,54 @@
+name: Update PhD year and smooth scroll effects
+on:
+  push:
+    paths:
+      - '.github/workflows/update-phd-scroll.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update website safely
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          variants=['Open to PhD positions from 2026','Open to PhD Positions from 2026','Open to PhD positions in 2026','Open to PhD Positions in 2026']
+          matched=[x for x in variants if x in s]
+          print('Matched phrases:',matched)
+          for x in matched:
+              s=s.replace(x,x.replace('2026','2027'))
+          # Other equivalent wording with the same explicit PhD positions context.
+          import re
+          s,n=re.subn(r'(Open to PhD positions.{0,24}?)2026',lambda m:m.group(1)+'2027',s,flags=re.I)
+          print('Other PhD wording updates:',n)
+          assert matched or n, 'PhD availability text not found; refusing unrelated changes'
+          p.write_text(s)
+          css=Path('banner-fix.css')
+          t=css.read_text()
+          t+='''
+
+          /* Gentle smooth scrolling and responsive image motion */
+          html {scroll-behavior:smooth}
+          @media (prefers-reduced-motion: no-preference) {
+            .view img {transition:transform .65s cubic-bezier(.2,.75,.25,1)}
+            .view img:hover {transform:translateY(-3px) scale(1.008)}
+            .view .scroll-reveal {animation:fade-up-in .8s both}
+            @keyframes fade-up-in {from{opacity:.35;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+          }
+          @media (prefers-reduced-motion:reduce) {
+            html {scroll-behavior:auto}
+            .view img {transition:none!important;transform:none!important}
+          }
+          '''
+          css.write_text(t)
+          PY
+      - name: Commit updates
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html banner-fix.css
+          git diff --cached --quiet || (git commit -m 'Update PhD availability to 2027 and restore smooth motion' && git push)
