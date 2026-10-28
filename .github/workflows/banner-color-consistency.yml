@@ -1,0 +1,62 @@
+name: Fix publication banner and consistent heading colors
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/banner-color-consistency.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Correct banner proportions and typography
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* BANNER_CONSISTENT_COLORS_AND_PUBLICATION_FIT_2026 */'
+          css=r"""
+          /* Preserve each existing p-* background image and smooth parallax. */
+          .banner:not(.home) .banner-title h1 {
+            color:#fff !important;
+            font-family:var(--font-title) !important;
+            font-size:clamp(34px,5.1vw,64px) !important;
+            font-weight:500 !important;
+            line-height:1.12 !important;
+            text-shadow:0 2px 12px rgba(0,0,0,.75) !important;
+          }
+          .banner:not(.home) .banner-title .bar {
+            background:#0e8c57 !important;
+            height:8px !important;
+            width:min(740px,82%) !important;
+          }
+          .banner.p-publications {
+            min-height:clamp(420px,54vh,540px) !important;
+            background-size:cover;
+            background-position-x:center;
+            background-position-y:62%;
+          }
+          .banner.p-publications .banner-title {
+            padding-bottom:28px !important;
+          }
+          @media(max-width:760px) {
+            .banner.p-publications {min-height:320px !important;}
+            .banner:not(.home) .banner-title h1 {font-size:clamp(28px,7vw,44px) !important;}
+          }
+          """
+          if marker not in s:
+            if '</style>' not in s: raise RuntimeError('Missing CSS style tag')
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Improve publication banner visibility and standardize heading accents"
+            git push
