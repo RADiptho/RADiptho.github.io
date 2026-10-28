@@ -1,0 +1,48 @@
+name: Fit Home section to desktop viewport
+on:
+  push:
+    paths:
+      - '.github/workflows/home-viewport-fit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  adjust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add desktop Home viewport CSS
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* HOME_VIEWPORT_FIT_2026 */'
+          css="""
+          @media (min-width: 861px) {
+            #home { box-sizing: border-box; }
+            #home .home-grid { grid-template-columns: minmax(160px, 20%) minmax(0, 1fr) !important; column-gap: clamp(14px, 2vw, 28px) !important; row-gap: 8px !important; align-items: start !important; }
+            #home .home-grid .photo { max-height: min(35vh, 290px) !important; width: 100% !important; object-fit: contain !important; }
+            #home .home-grid .about { min-width: 0 !important; }
+            #home .home-grid .about p { font-size: clamp(11px, .91vw, 13px) !important; line-height: 1.4 !important; margin: 5px 0 8px !important; }
+            #home .home-grid .about h1, #home .home-grid .about h2 { margin-top: 0 !important; margin-bottom: 4px !important; }
+            #home .home-grid .links { display: grid !important; grid-template-columns: repeat(5,minmax(0,1fr)) !important; grid-column: 1/-1 !important; gap: 8px !important; margin-top: 3px !important; }
+            #home .home-grid .links a { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; white-space: nowrap !important; font-size: 12px !important; padding: 6px 5px !important; justify-content: center !important; }
+          }
+          @media (max-width: 860px) {
+            #home .home-grid .links { display: flex !important; flex-wrap: wrap !important; gap: 7px !important; }
+          }
+          """
+          if marker not in s:
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit Home viewport adjustment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Fit Home content and social links within desktop viewport"
+            git push
+          fi
