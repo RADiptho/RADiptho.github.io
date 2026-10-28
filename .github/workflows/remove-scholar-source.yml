@@ -1,0 +1,61 @@
+name: Permanently remove Google Scholar card
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("index.html")
+          s=p.read_text(encoding="utf-8")
+          original=s
+
+          # Remove complete Scholar card by finding a balanced container that
+          # contains both the Scholar heading and its metric/status content.
+          tag_re=re.compile(r'<(?P<close>/)?(?P<tag>div|section|article)\b[^>]*>', re.I)
+          tokens=list(tag_re.finditer(s))
+          candidates=[]
+          stack=[]
+          for m in tokens:
+              if not m.group('close'):
+                  stack.append(m)
+              else:
+                  tag=m.group('tag').lower()
+                  for i in range(len(stack)-1,-1,-1):
+                      if stack[i].group('tag').lower()==tag:
+                          op=stack.pop(i)
+                          block=s[op.start():m.end()]
+                          text=re.sub(r'<[^>]+>',' ',block)
+                          text=re.sub(r'\s+',' ',text)
+                          if ('Google Scholar' in text and
+                              ('Scholar publications' in text or 'i10-index' in text or 'HTTP 403' in text) and
+                              ('Open profile' in text or 'Citations' in text)):
+                              candidates.append((op.start(),m.end(),len(block)))
+                          break
+
+          if not candidates:
+              raise SystemExit("Scholar card source block not found; refusing blind edit")
+
+          # smallest complete matching container = the card itself, not whole page.
+          a,b,_=min(candidates,key=lambda x:x[2])
+          s=s[:a]+s[b:]
+
+          # Remove obsolete Scholar helper script tags if present.
+          s=re.sub(r'\s*<script[^>]+src=["\'][^"\']*(?:clean-scholar|scholar)[^"\']*["\'][^>]*></script>\s*','\n',s,flags=re.I)
+
+          if s==original:
+              raise SystemExit("No change made")
+          p.write_text(s,encoding="utf-8")
+          print("Removed Scholar source block:", b-a, "characters")
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Permanently remove Google Scholar metrics card"
+          git push
