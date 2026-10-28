@@ -1,0 +1,79 @@
+name: Correct Scholar metrics presentation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/correct-scholar-presentation.yml'
+permissions:
+  contents: write
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix verified metrics labels and responsive cards
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- SCHOLAR_VERIFIED_PRESENTATION_FIX_2026 -->'
+          patch=r"""
+          <style>
+          @media(min-width:1000px) {
+            #publications .scholar-metrics, #publications .scholar-stats, #publications .metric-grid {
+              grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+            }
+          }
+          </style>
+          <script>
+          (function(){
+            function correctScholar(){
+              const headings=[...document.querySelectorAll('h1,h2,h3,h4')];
+              const h=headings.find(e=>e.textContent.trim()==='Google Scholar');
+              if(!h) return;
+              const panel=h.closest('.card,section,article') || h.parentElement?.parentElement;
+              if(!panel) return;
+              const leaves=[...panel.querySelectorAll('*')].filter(e=>e.children.length===0);
+              for(const el of leaves){
+                const t=el.textContent.trim();
+                if(t==='Metrics from Google Scholar, synchronized automatically on a daily schedule, not in real time.'){
+                  el.textContent='Google Scholar metrics manually verified from a profile screenshot on 28 October 2026. Daily automatic sync is configured but currently blocked (HTTP 403); these values are not live.';
+                }
+              }
+              const pubs=leaves.find(e=>e.textContent.trim()==='Publications');
+              if(pubs){
+                const card=pubs.parentElement;
+                if(card){
+                  const value=[...card.querySelectorAll('*')].find(e=>e.children.length===0 && e.textContent.trim()==='0');
+                  if(value) value.textContent='—';
+                  pubs.textContent='Scholar publications (not synced)';
+                }
+              }
+              const candidates=[...panel.querySelectorAll('div')];
+              const cards=candidates.filter(e=>e.children.length>=3 && [...e.children].some(x=>x.textContent.trim()==='Citations') && [...e.children].some(x=>x.textContent.trim().includes('h-index')));
+              if(cards.length) {
+                const grid=cards.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length)[0];
+                grid.style.display='grid';
+                grid.style.gridTemplateColumns='repeat(auto-fit,minmax(165px,1fr))';
+                grid.style.gap='12px';
+              }
+            }
+            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>{correctScholar();setTimeout(correctScholar,800)});
+            else {correctScholar();setTimeout(correctScholar,800)}
+          })();
+          </script>
+          """
+          if marker not in s:
+            s=s.replace('</body>',marker+patch+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Clarify manually verified Scholar metrics and unknown publication count"
+            git push
+          fi
