@@ -1,0 +1,54 @@
+name: Smooth keyboard parallax easing
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/smooth-parallax-easing.yml'
+permissions:
+  contents: write
+jobs:
+  smooth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Improve parallax interpolation without changing images
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- SMOOTH_PARALLAX_EASING_2026 -->'
+          js=r"""
+          <script>
+          (function(){
+            let target=0, current=0, raf=0, last=0;
+            const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+            function init(){
+              const layer=document.querySelector('.parallax-keyboard');
+              if(!layer || reduce.matches) return;
+              // Replace previous scroll listener's movement with eased CSS transforms.
+              // Existing listener still sets transform, so a transition smooths those updates.
+              layer.style.transition='transform 220ms cubic-bezier(.22,.61,.36,1)';
+              layer.style.backfaceVisibility='hidden';
+              layer.style.transformOrigin='center';
+              layer.style.contain='paint';
+              layer.style.willChange='transform';
+            }
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+            else init();
+          })();
+          </script>
+          """
+          if marker not in s:
+            s=s.replace('</body>',marker+js+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Ease keyboard parallax scrolling without altering page imagery"
+            git push
+          fi
