@@ -1,0 +1,64 @@
+name: Repair PhD year and scroll reveal
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-phd-year-reveal.yml'
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update content and install scroll observer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          matches=list(re.finditer(r'Open.{0,45}PhD.{0,55}2026',s,re.I))
+          print('Found PhD year contexts:',[(m.group(0)[:110]) for m in matches[:12]])
+          s,count=re.subn(r'(Open.{0,45}PhD.{0,55}?)2026',lambda m:m.group(1)+'2027',s,flags=re.I)
+          print('Updated PhD year instances:',count)
+          script='<script src="site-reveal-2027.js?v=4" defer></script>'
+          if 'site-reveal-2027.js' not in s:
+              s=s.replace('</body>',script+'\n</body>',1)
+          assert 'site-reveal-2027.js' in s
+          p.write_text(s,encoding='utf-8')
+          Path('site-reveal-2027.js').write_text("""
+          (() => {
+            const replaceYear = () => {
+              const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+              while(walker.nextNode()){
+                const node=walker.currentNode;
+                if(node.parentElement?.closest('script,style'))continue;
+                node.textContent=node.textContent.replace(/(Open.{0,45}PhD.{0,55}?)2026/gi,'$1'+'2027');
+              }
+            };
+            const start=()=>{
+              replaceYear();
+              if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+              const style=document.createElement('style');
+              style.textContent='html{scroll-behavior:smooth}.site-reveal-2027{opacity:0;transform:translateY(20px);transition:opacity .75s ease,transform .75s ease}.site-reveal-2027.site-visible{opacity:1;transform:none}';
+              document.head.append(style);
+              if(!('IntersectionObserver' in window))return;
+              const observer=new IntersectionObserver(entries=>{
+                entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('site-visible');observer.unobserve(entry.target)}});
+              },{threshold:.08,rootMargin:'0px 0px 45px 0px'});
+              document.querySelectorAll('main .view h2,main .view h3,main .view p,main .view img,main .view article').forEach(el=>{
+                if(el.closest('[hidden]'))return;
+                el.classList.add('site-reveal-2027');
+                observer.observe(el);
+              });
+            };
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+          })();
+          """,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html site-reveal-2027.js
+          git diff --cached --quiet || (git commit -m 'Correct PhD year and add actual scroll reveal animation' && git push)
