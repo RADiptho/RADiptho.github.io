@@ -1,0 +1,57 @@
+name: Remove Scholar rendered block robustly
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          cat > remove-scholar-robust.js <<'JS'
+          (() => {
+            const TARGETS=['Scholar publications (not synced)','Google Scholar metrics manually verified','i10-index'];
+            function remove(){
+              const nodes=[...document.querySelectorAll('body *')];
+              const hit=nodes.find(e=>TARGETS.some(t=>(e.textContent||'').includes(t)));
+              if(!hit) return false;
+              let best=null, n=hit;
+              for(let i=0;i<12 && n && n!==document.body;i++,n=n.parentElement){
+                const text=(n.innerText||'');
+                const r=n.getBoundingClientRect();
+                if(text.includes('Google Scholar') &&
+                   text.includes('Citations') &&
+                   text.includes('h-index') &&
+                   text.includes('i10-index') &&
+                   r.width>500 && r.height>100 && r.height<600){
+                  best=n;
+                }
+              }
+              if(best){ best.remove(); return true; }
+              return false;
+            }
+            function watch(){
+              remove();
+              const mo=new MutationObserver(()=>remove());
+              mo.observe(document.body,{childList:true,subtree:true});
+              setTimeout(()=>{remove();},300);
+              setTimeout(()=>{remove();},1000);
+              setTimeout(()=>{remove();},2500);
+            }
+            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watch); else watch();
+          })();
+          JS
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=re.sub(r'\s*<script[^>]+src=["\'][^"\']*remove-scholar-robust\.js[^"\']*["\'][^>]*></script>','',s,flags=re.I)
+          s=s.replace('</body>','<script src="remove-scholar-robust.js?v=1"></script>\n</body>')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html remove-scholar-robust.js
+          git commit -m "Remove dynamically rendered Scholar metrics block"
+          git push
