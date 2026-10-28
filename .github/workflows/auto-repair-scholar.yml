@@ -1,0 +1,62 @@
+name: Auto repair Scholar section
+on:
+  push:
+    paths:
+      - '.github/workflows/auto-repair-scholar.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          cat > scholar-auto-repair.js <<'JS'
+          (() => {
+            const norm = s => (s || '').replace(/\s+/g,' ').trim();
+            function removeCard(){
+              const nodes = [...document.querySelectorAll('body *')];
+              const label = nodes.find(e => e.children.length===0 && norm(e.textContent)==='Scholar publications (not synced)')
+                || nodes.find(e => e.children.length===0 && norm(e.textContent)==='Google Scholar');
+              if(!label) return;
+              let n=label, found=null;
+              for(let i=0;i<12 && n && n!==document.body;i++,n=n.parentElement){
+                const t=norm(n.textContent);
+                if(t.includes('Google Scholar') && t.includes('Citations') && t.includes('h-index') && t.includes('i10-index')){
+                  found=n;
+                  break;
+                }
+              }
+              if(found) found.remove();
+            }
+            function init(){
+              removeCard();
+              let busy=false;
+              new MutationObserver(()=>{
+                if(busy)return;
+                busy=true;
+                queueMicrotask(()=>{busy=false;removeCard()});
+              }).observe(document.body,{childList:true,subtree:true});
+              window.addEventListener('hashchange',removeCard);
+              document.addEventListener('click',()=>setTimeout(removeCard,100));
+            }
+            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+            else init();
+          })();
+          JS
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          import re
+          s=re.sub(r'\s*<script[^>]*src=["\'][^"\']*scholar-auto-repair\.js[^"\']*["\'][^>]*></script>', '', s, flags=re.I)
+          if '</body>' not in s: raise SystemExit('Cannot find closing body; refusing to edit')
+          s=s.replace('</body>', '<script src="scholar-auto-repair.js?v=20261028b"></script>\n</body>')
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html scholar-auto-repair.js
+          git diff --cached --quiet || (git commit -m 'Auto-remove Scholar metrics from Publications' && git push)
