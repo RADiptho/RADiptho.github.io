@@ -1,0 +1,38 @@
+name: Fix actual Publications banner
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-actual-publications-banner.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          assert Path('IMG_3281.jpeg').is_file()
+          assert 'class="banner"' in s and 'p-publications' in s
+          css="""<style id="actual-publications-banner-fix">
+          header.banner.p-publications, .banner.p-publications {
+            background-image:linear-gradient(90deg,rgba(0,0,0,.32),rgba(0,0,0,.18)),url('IMG_3281.jpeg')!important;
+            background-position:center center!important;
+            background-size:cover!important;
+            background-repeat:no-repeat!important;
+          }
+          .banner.p-publications .banner-title h1 {color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.65)!important}
+          </style>"""
+          if 'id="actual-publications-banner-fix"' not in s:
+              s=s.replace('</head>',css+'\n</head>',1)
+          assert 'actual-publications-banner-fix' in s
+          p.write_text(s)
+          print('Applied exact .banner.p-publications selector')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Fix Publications banner with correct selector' && git push)
