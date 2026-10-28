@@ -1,4 +1,18 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0;padding:0}</style></head><body><title>Md. Rakib Ahammed Diptho</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0;padding:0}/* HOME_HORIZONTAL_SOCIAL_FIX_V2 */
+/* Home: portrait and biography side-by-side; social links in one row underneath */
+@media (min-width: 861px) {
+  .home-grid { grid-template-columns: minmax(190px, 24%) minmax(0, 1fr) !important; gap: clamp(12px, 2vw, 28px) !important; }
+  .home-grid > div:first-child { display: contents !important; }
+  .home-grid .photo { grid-column: 1; grid-row: 1; width: 100%; max-width: 100%; max-height: min(42vh, 360px); object-fit: contain; }
+  .home-grid .about { grid-column: 2; grid-row: 1; min-width: 0; }
+  .home-grid .links { grid-column: 1 / -1; grid-row: 2; display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 8px; margin-top: 0; min-width: 0; width: 100%; }
+  .home-grid .links a { min-width: 0; width: 100%; max-width: 100%; justify-content: center; box-sizing: border-box; font-size: clamp(.68rem, .9vw, .82rem); padding-inline: 5px; }
+}
+@media (max-width: 860px) {
+  .home-grid .links { display: flex !important; flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .home-grid .links a { width: auto; max-width: 100%; }
+}
+</style></head><body><title>Md. Rakib Ahammed Diptho</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Md. Rakib Ahammed Diptho, Research Assistant, Department of Computer Science and Engineering, Jahangirnagar University: research, publications, CV, service and contact.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
