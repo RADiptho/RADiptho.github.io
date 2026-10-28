@@ -7,8 +7,8 @@
   "publications": [],
   "publication_count": 0,
   "last_success": null,
-  "last_attempt": null,
+  "last_attempt": "2026-10-28T12:57:04Z",
   "status": "never_synced",
-  "error": null,
+  "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
   "source": "Google Scholar profile, scheduled daily through GitHub Actions (not real-time)"
 }
