@@ -1,0 +1,29 @@
+name: Inspect Publications hero markup
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-publications-hero.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          out=[]
+          for pattern in [r'id=["\']publications["\']',r'PUBLICATIONS',r'publications-hero',r'pub-hero',r'IMG_3281.jpeg',r'Wiley-Style',r'background-image',r'<section[^>]+',r'<header[^>]+']:
+              matches=list(re.finditer(pattern,s,re.I))
+              out.append('PATTERN '+pattern+' COUNT '+str(len(matches)))
+              for m in matches[:12]:
+                  out.append(s[max(0,m.start()-500):m.end()+650].replace('\n',' ')[:1200])
+          Path('publications-hero-diagnostic.txt').write_text('\n'.join(out)[:35000])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add publications-hero-diagnostic.txt
+          git diff --cached --quiet || (git commit -m 'Inspect Publications hero structure' && git push)
