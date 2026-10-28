@@ -129,10 +129,10 @@ b, strong { font-weight: 700; }
 
 /* home: photo left, About Me right (as in the model) */
 .home .page { padding-block: clamp(14px, 2.2vh, 30px) clamp(14px, 2.2vh, 30px); }
-.home-grid { display: grid; grid-template-columns: clamp(180px, 24vh, 300px) minmax(0, 1fr); gap: clamp(22px, 3vw, 40px); align-items: start; }
+.home-grid { display: grid; grid-template-columns: clamp(200px, 24vw, 300px) minmax(0, 1fr); gap: clamp(22px, 3vw, 40px); align-items: start; }
 /* profile buttons: brand icon + name, brand colour on hover, soft glow */
-.links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
-.links a { --brand: var(--navy); display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 600; line-height: 1; color: var(--text); text-decoration: none; background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 10px 6px 7px; white-space: nowrap; box-shadow: 0 1px 2px rgba(15,42,68,.05); transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+.links { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 12px; width: 100%; min-width: 0; }
+.links a { min-width: 0; max-width: 100%; box-sizing: border-box; --brand: var(--navy); display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 600; line-height: 1; color: var(--text); text-decoration: none; background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 10px 6px 7px; white-space: nowrap; box-shadow: 0 1px 2px rgba(15,42,68,.05); transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
 .links a svg { width: 16px; height: 16px; fill: var(--brand); flex: none; transition: fill .2s ease, transform .3s ease; }
 .links a:hover, .links a:focus-visible { background: var(--brand); border-color: var(--brand); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 18px color-mix(in srgb, var(--brand) 38%, transparent), 0 0 0 4px color-mix(in srgb, var(--brand) 14%, transparent); }
 .links a:hover svg, .links a:focus-visible svg { fill: #fff; transform: scale(1.08); }
