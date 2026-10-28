@@ -1,0 +1,51 @@
+name: Correct Home photo and equal social buttons
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-photo-and-social.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix Google Scholar class collision and photo sizing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          # Scholar link was inheriting the publication metrics panel's .scholar padding.
+          s=s.replace('<a class="scholar" href="https://scholar.google.com/citations?', '<a class="scholar-profile" href="https://scholar.google.com/citations?')
+          marker='/* FINAL_HOME_PHOTO_SOCIAL_FIX_2026 */'
+          css="""
+          @media (min-width: 861px) {
+            .view.home .home-grid { display: grid !important; grid-template-columns: minmax(170px, 22%) minmax(0,1fr) !important; gap: 10px 24px !important; align-items: start !important; }
+            .view.home .home-grid > div:first-child { display: contents !important; }
+            .view.home .home-grid > div.about { grid-column: 2 !important; grid-row: 1 !important; min-width: 0 !important; }
+            .view.home .home-grid img.photo { grid-column: 1 !important; grid-row: 1 !important; display: block !important; width: 100% !important; height: auto !important; max-height: none !important; max-width: none !important; object-fit: cover !important; border: 0 !important; border-radius: 6px !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
+            .view.home .home-grid .links { grid-column: 1 / -1 !important; grid-row: 2 !important; display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 9px !important; margin: 0 !important; width: 100% !important; }
+            .view.home .home-grid .links > a { display: inline-flex !important; width: 100% !important; min-width: 0 !important; max-width: none !important; min-height: 42px !important; height: 42px !important; padding: 7px 8px !important; margin: 0 !important; box-sizing: border-box !important; align-items: center !important; justify-content: center !important; gap: 7px !important; border-radius: 999px !important; font-size: 12px !important; line-height: 1 !important; white-space: nowrap !important; }
+          }
+          .view.home .home-grid .links > a.scholar-profile { background: var(--surface) !important; border: 1px solid var(--rule) !important; box-shadow: 0 1px 2px rgba(15,42,68,.05) !important; }
+          .view.home .home-grid .links > a.scholar-profile:hover { background: var(--brand) !important; color: white !important; }
+          @media (max-width: 860px) {
+            .view.home .home-grid img.photo { padding: 0 !important; border: 0 !important; max-height: none !important; height: auto !important; object-fit: cover !important; }
+            .view.home .home-grid .links > a { padding: 8px 12px !important; margin: 0 !important; box-sizing: border-box !important; }
+          }
+          """
+          if marker not in s:
+            s=s.replace('</style>',marker+css+'</style>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Fix Scholar button class collision and Home photo whitespace"
+            git push
+          fi
