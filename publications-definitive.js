@@ -1,5 +1,5 @@
 (() => {
-  const IMAGE='Wiley_article_first_page_2x.png';
+  const IMAGE='Wiley-Style Mango Disease Research Article.png';
   const isPub=()=>location.hash.toLowerCase().includes('publications') ||
     [...document.querySelectorAll('a')].some(a=>a.classList.contains('active') && /publications/i.test(a.textContent));
 
@@ -36,7 +36,7 @@
     if(!img){
       img=document.createElement('img');
       img.dataset.wileyFullpage='1';
-      img.src=IMAGE;
+      img.src=encodeURI(IMAGE);
       img.alt='CNN5Conv2FC Wiley article first page';
       hero.prepend(img);
     }
