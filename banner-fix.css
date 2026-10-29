@@ -132,3 +132,33 @@ html body header#banner.banner::after {
     max-height: 300px !important;
   }
 }
+
+/* 2026-10-29 — slightly shorter unified banner */
+html body header#banner.banner,
+html body header#banner.banner.home,
+html body header#banner.banner.p-home,
+html body header#banner.banner.p-research,
+html body header#banner.banner.p-publications,
+html body header#banner.banner.p-datasets,
+html body header#banner.banner.p-cv,
+html body header#banner.banner.p-service,
+html body header#banner.banner.p-contact {
+  height: 300px !important;
+  min-height: 300px !important;
+  max-height: 300px !important;
+}
+@media (max-width:900px){
+  html body header#banner.banner,
+  html body header#banner.banner.home,
+  html body header#banner.banner.p-home,
+  html body header#banner.banner.p-research,
+  html body header#banner.banner.p-publications,
+  html body header#banner.banner.p-datasets,
+  html body header#banner.banner.p-cv,
+  html body header#banner.banner.p-service,
+  html body header#banner.banner.p-contact {
+    height: 270px !important;
+    min-height: 270px !important;
+    max-height: 270px !important;
+  }
+}
