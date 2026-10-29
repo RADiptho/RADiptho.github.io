@@ -188,3 +188,13 @@ html body header#banner.banner.p-contact{
   height:250px!important;min-height:250px!important;max-height:250px!important;
  }
 }
+
+/* CV banner — user supplied CV_banner_3840x960.jpg */
+html body header#banner.banner.p-cv,
+html body #banner.banner.p-cv,
+html body .banner.p-cv {
+  background-image: linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,.04)),url("CV_banner_3840x960.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
