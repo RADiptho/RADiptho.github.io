@@ -71,3 +71,64 @@ html{scroll-behavior:smooth}
   html body #banner.banner {background-attachment:fixed!important;background-size:cover!important;background-position:center center!important}
 }
 @media(max-width:900px){html body #banner.banner{background-attachment:scroll!important}}
+
+
+/* 2026-10-29 — unify every top banner; preserve each existing image */
+html body header#banner.banner {
+  height: 340px !important;
+  min-height: 340px !important;
+  max-height: 340px !important;
+  width: 100% !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  image-rendering: auto !important;
+  filter: none !important;
+}
+
+/* Home used to look oversized/soft: keep the same frame as every other page. */
+html body header#banner.banner.home,
+html body header#banner.banner.p-home {
+  height: 340px !important;
+  min-height: 340px !important;
+  max-height: 340px !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+/* Override older page-specific heights, including Publications. */
+html body header#banner.banner.p-research,
+html body header#banner.banner.p-publications,
+html body header#banner.banner.p-datasets,
+html body header#banner.banner.p-cv,
+html body header#banner.banner.p-service,
+html body header#banner.banner.p-contact {
+  height: 340px !important;
+  min-height: 340px !important;
+  max-height: 340px !important;
+}
+
+/* Do not soften/blur banner layers or their images. */
+html body header#banner.banner,
+html body header#banner.banner::before,
+html body header#banner.banner::after {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 900px) {
+  html body header#banner.banner,
+  html body header#banner.banner.home,
+  html body header#banner.banner.p-home,
+  html body header#banner.banner.p-research,
+  html body header#banner.banner.p-publications,
+  html body header#banner.banner.p-datasets,
+  html body header#banner.banner.p-cv,
+  html body header#banner.banner.p-service,
+  html body header#banner.banner.p-contact {
+    height: 300px !important;
+    min-height: 300px !important;
+    max-height: 300px !important;
+  }
+}
