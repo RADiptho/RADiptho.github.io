@@ -198,3 +198,20 @@ html body .banner.p-cv {
   background-position: center center !important;
   background-repeat: no-repeat !important;
 }
+
+/* Home banner sharpness fix only — DO NOT change dimensions */
+html body header#banner.banner.home,
+html body header#banner.banner.p-home {
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  image-rendering:auto!important;
+}
+html body header#banner.banner.home::before,
+html body header#banner.banner.home::after,
+html body header#banner.banner.p-home::before,
+html body header#banner.banner.p-home::after {
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
