@@ -162,3 +162,29 @@ html body header#banner.banner.p-contact {
     max-height: 270px !important;
   }
 }
+
+/* 2026-10-29 — final compact banner height */
+html body header#banner.banner,
+html body header#banner.banner.home,
+html body header#banner.banner.p-home,
+html body header#banner.banner.p-research,
+html body header#banner.banner.p-publications,
+html body header#banner.banner.p-datasets,
+html body header#banner.banner.p-cv,
+html body header#banner.banner.p-service,
+html body header#banner.banner.p-contact{
+ height:280px!important;min-height:280px!important;max-height:280px!important;
+}
+@media(max-width:900px){
+ html body header#banner.banner,
+ html body header#banner.banner.home,
+ html body header#banner.banner.p-home,
+ html body header#banner.banner.p-research,
+ html body header#banner.banner.p-publications,
+ html body header#banner.banner.p-datasets,
+ html body header#banner.banner.p-cv,
+ html body header#banner.banner.p-service,
+ html body header#banner.banner.p-contact{
+  height:250px!important;min-height:250px!important;max-height:250px!important;
+ }
+}
