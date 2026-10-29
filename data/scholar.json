@@ -1,7 +1,9 @@
 {
   "profile": {
     "user": "SSoTLJoAAAAJ",
-    "url": "https://scholar.google.com/citations?user=SSoTLJoAAAAJ"
+    "url": "https://scholar.google.com/citations?user=SSoTLJoAAAAJ",
+    "name": "Rakib Ahammed Diptho",
+    "affiliation": "M.Sc. in CSEJahangirnagar University, B.Sc. in CSE BRAC University"
   },
   "metrics": {
     "citations": {
@@ -18,13 +20,116 @@
     },
     "recent_since": 2021
   },
-  "publications": [],
-  "publication_count": 0,
-  "last_success": null,
-  "last_attempt": "2026-10-28T12:57:04Z",
-  "status": "manual_verified",
-  "error": "Automatic Google Scholar sync blocked (HTTP 403); displayed metrics manually verified",
-  "source": "Google Scholar profile screenshot, manually verified 2026-10-28 (not live)",
-  "last_verified": "2026-10-28",
-  "verification_method": "User-provided screenshot of Google Scholar profile"
+  "publications": [
+    {
+      "title": "Event Aligned MODIS Dataset for Mangrove Canopy Response to Tropical Cyclones in the Bay of Bengal",
+      "authors": "RA Diptho, P Ghosh",
+      "venue": "Mendeley Data, Elsevier",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:UebtZRa9Y70C"
+    },
+    {
+      "title": "Physically consistent and spatially conformalized machine learning for trustworthy flood susceptibility mapping of the 2024 Feni flash flood",
+      "authors": "RA Diptho, P Ghosh, SH Chowdhury",
+      "venue": "Discover Geoscience 4 (1), 390",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:Se3iqnhoufwC"
+    },
+    {
+      "title": "Cross-Dataset Evaluation of the Lightweight YOLO Family for Breast Ultrasound Lesion Segmentation: Effects of Preprocessing, Hyperparameter Optimization, and Test-Time Augmentation",
+      "authors": "RA Diptho, P Ghosh, SH Chowdhury, S Basak",
+      "venue": "NDT 4 (3), 28",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:roLk4NBRz8UC"
+    },
+    {
+      "title": "Hand Landmark Detection using YOLO26n for Gesture-Based Smart Wheelchair Navigation",
+      "authors": "RA Diptho, SH Chowdhury, MA Al Mamun, MS Hosen, MS Rahman, ...",
+      "venue": "Jahangirnagar University Journal of Electronics and Computer Science 17",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:_FxGoFyzp5QC"
+    },
+    {
+      "title": "Gesture-Based Navigation of Smart Wheelchairs: A Review of Current Trends and Future Directions",
+      "authors": "RA Diptho, SH Chowdhury, MAA Mamun, MS Hosen, MS Rahman, ...",
+      "venue": "Technologies 14 (7), 430",
+      "year": 2026,
+      "citations": 2,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:WF5omc3nYNoC"
+    },
+    {
+      "title": "HandGesture-5G: A Multi-View, Multi-Illumination Smartphone Image Dataset of Five Static Hand Gestures for Robust Computer Vision Research",
+      "authors": "RA Diptho, SH Chowdhury, MA Al Mamun, MS Hosen, MS Rahman, ...",
+      "venue": "Mendeley Data, Elsevier",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:eQOLeE2rZwMC"
+    },
+    {
+      "title": "A Cross-Modal Transformer with Explainable AI for Multimodal Breast Cancer Detection",
+      "authors": "RA Diptho, P Ghosh, S Basak",
+      "venue": "2026 International Conference on Power, Electronics, Communications …",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:LkGwnXOMwfcC"
+    },
+    {
+      "title": "Bangladesh Historical Rainfall and Meteorological Dataset for Future Rainfall Prediction",
+      "authors": "RA Diptho, P Ghosh, S Basak",
+      "venue": "Mendeley Data, Elsevier",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:YsMSGLbcyi4C"
+    },
+    {
+      "title": "CNN5Conv2FC: A Resource‐Aware Deep Learning Framework for Real‐Time Mango Leaf Disease Recognition",
+      "authors": "RA Diptho, P Ghosh, SH Chowdhury, S Basak",
+      "venue": "Advances in Agriculture 2026 (1), 7124711",
+      "year": 2026,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:0EnyYjriUFMC"
+    },
+    {
+      "title": "xLSTM-Based Framework for Accurate Rainfall Forecasting Across Bangladesh: A Comparative Analysis with LSTM and GRU",
+      "authors": "RA Diptho, P Ghosh, S Basak",
+      "venue": "2025 28th International Conference on Computer and Information Technology …",
+      "year": 2025,
+      "citations": null,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:Y0pCki6q_DkC"
+    },
+    {
+      "title": "An Explainable Machine Learning Framework for Crop Production Prediction and Recommendation System in Bangladesh",
+      "authors": "RA Diptho, P Ghosh, S Basak",
+      "venue": "2025 IEEE 4th International Conference on Robotics, Automation, Artificial …",
+      "year": 2025,
+      "citations": 1,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:W7OEmFMy1HYC"
+    },
+    {
+      "title": "Enhancing Dermatological Diagnosis Through Medical Image Analysis: How Effective Is YOLO11 Compared to Leading CNN Models?",
+      "authors": "RA Diptho, S Basak",
+      "venue": "Non-Destructive Testing 3 (2), 11",
+      "year": 2025,
+      "citations": 13,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:9yKSN-GCB0IC"
+    },
+    {
+      "title": "PCOS Diagnosis with Confluence CNN: A Revolution in Women's Health",
+      "authors": "RA Diptho, N Jahan, T Istiyaq, F Anika, MI Hossain",
+      "venue": "2023 26th International Conference on Computer and Information Technology …",
+      "year": 2023,
+      "citations": 6,
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:qjMakFHDy7sC"
+    }
+  ],
+  "publication_count": 13,
+  "last_success": "2026-10-29T08:29:55Z",
+  "last_attempt": "2026-10-29T08:29:55Z",
+  "status": "ok",
+  "error": null,
+  "source": "Google Scholar profile, read by scripts/sync_scholar.py on a weekly GitHub Actions schedule (not real-time data)"
 }
