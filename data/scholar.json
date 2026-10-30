@@ -128,8 +128,8 @@
   ],
   "publication_count": 13,
   "last_success": "2026-10-29T08:29:55Z",
-  "last_attempt": "2026-10-29T08:29:55Z",
-  "status": "ok",
-  "error": null,
+  "last_attempt": "2026-10-30T08:39:53Z",
+  "status": "failed",
+  "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
   "source": "Google Scholar profile, read by scripts/sync_scholar.py on a weekly GitHub Actions schedule (not real-time data)"
 }
