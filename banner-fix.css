@@ -2,43 +2,28 @@
 .banner:not(.home) .banner-title h1,
 .banner:not(.home) .banner-title h2,
 .banner:not(.home) .banner-title .title {
-  color: #fff !important;
   font-size: clamp(34px, 5vw, 62px) !important;
   line-height: 1.1 !important;
   font-weight: 600 !important;
+}
+/* White heading on the dark banners; Publications is a light banner and keeps its navy heading (index.html). */
+.banner:not(.home):not(.p-publications) .banner-title h1,
+.banner:not(.home):not(.p-publications) .banner-title h2,
+.banner:not(.home):not(.p-publications) .banner-title .title {
+  color: #fff !important;
   text-shadow: 0 2px 12px rgba(0,0,0,.72) !important;
 }
 .banner:not(.home) .banner-title .bar {
   background: #0e8c57 !important;
   height: 7px !important;
 }
-.banner.p-publications {
-  min-height: clamp(420px, 55vh, 550px) !important;
-  background-size: cover !important;
-  background-position-x: center !important;
-}
-.banner.p-publications .banner-title {
-  padding-bottom: 28px !important;
-}
 @media (max-width: 760px) {
-  .banner.p-publications { min-height: 320px !important; }
   .banner:not(.home) .banner-title h1,
   .banner:not(.home) .banner-title h2,
   .banner:not(.home) .banner-title .title {
     font-size: clamp(28px, 7vw, 44px) !important;
   }
 }
-
-/* Publications banner: exact active header, updated 2026-10-28 */
-html body header#banner.banner.p-publications,
-html body #banner.p-publications,
-html body .banner.p-publications {
- background-image: linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,.12)),url("IMG_3281.jpeg") !important;
- background-size: cover !important;
- background-position: center center !important;
- background-repeat: no-repeat !important;
-}
-html body .banner.p-publications .banner-title h1 { color:#fff !important; text-shadow:0 2px 12px rgba(0,0,0,.75) !important; }
 
 /* Research & Expertise banner: uploaded image */
 html body header#banner.banner.p-research,
@@ -72,51 +57,29 @@ html{scroll-behavior:smooth}
 }
 @media(max-width:900px){html body #banner.banner{background-attachment:scroll!important}}
 
-
-/* 2026-10-29 — unify every top banner; preserve each existing image */
-html body header#banner.banner {
-  height: 340px !important;
-  min-height: 340px !important;
-  max-height: 340px !important;
-  width: 100% !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-  image-rendering: auto !important;
-  filter: none !important;
-}
-
-/* Home used to look oversized/soft: keep the same frame as every other page. */
+/* ------------------------------------------------------------------
+   Unified top-banner frame on every page (2026-10-29, consolidated 2026-11-05).
+   Desktop: 280px. Up to 900px: 250px. The three earlier height blocks
+   (340 -> 300 -> 280) are collapsed into this one; the values are unchanged.
+   ------------------------------------------------------------------ */
+html body header#banner.banner,
 html body header#banner.banner.home,
-html body header#banner.banner.p-home {
-  height: 340px !important;
-  min-height: 340px !important;
-  max-height: 340px !important;
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-/* Override older page-specific heights, including Publications. */
+html body header#banner.banner.p-home,
 html body header#banner.banner.p-research,
 html body header#banner.banner.p-publications,
 html body header#banner.banner.p-datasets,
 html body header#banner.banner.p-cv,
 html body header#banner.banner.p-service,
 html body header#banner.banner.p-contact {
-  height: 340px !important;
-  min-height: 340px !important;
-  max-height: 340px !important;
+  height: 280px !important;
+  min-height: 280px !important;
+  max-height: 280px !important;
+  width: 100% !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  image-rendering: auto !important;
 }
-
-/* Do not soften/blur banner layers or their images. */
-html body header#banner.banner,
-html body header#banner.banner::before,
-html body header#banner.banner::after {
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
 @media (max-width: 900px) {
   html body header#banner.banner,
   html body header#banner.banner.home,
@@ -127,66 +90,19 @@ html body header#banner.banner::after {
   html body header#banner.banner.p-cv,
   html body header#banner.banner.p-service,
   html body header#banner.banner.p-contact {
-    height: 300px !important;
-    min-height: 300px !important;
-    max-height: 300px !important;
+    height: 250px !important;
+    min-height: 250px !important;
+    max-height: 250px !important;
   }
 }
 
-/* 2026-10-29 — slightly shorter unified banner */
+/* Never soften or blur the banner or its overlay layers. */
 html body header#banner.banner,
-html body header#banner.banner.home,
-html body header#banner.banner.p-home,
-html body header#banner.banner.p-research,
-html body header#banner.banner.p-publications,
-html body header#banner.banner.p-datasets,
-html body header#banner.banner.p-cv,
-html body header#banner.banner.p-service,
-html body header#banner.banner.p-contact {
-  height: 300px !important;
-  min-height: 300px !important;
-  max-height: 300px !important;
-}
-@media (max-width:900px){
-  html body header#banner.banner,
-  html body header#banner.banner.home,
-  html body header#banner.banner.p-home,
-  html body header#banner.banner.p-research,
-  html body header#banner.banner.p-publications,
-  html body header#banner.banner.p-datasets,
-  html body header#banner.banner.p-cv,
-  html body header#banner.banner.p-service,
-  html body header#banner.banner.p-contact {
-    height: 270px !important;
-    min-height: 270px !important;
-    max-height: 270px !important;
-  }
-}
-
-/* 2026-10-29 — final compact banner height */
-html body header#banner.banner,
-html body header#banner.banner.home,
-html body header#banner.banner.p-home,
-html body header#banner.banner.p-research,
-html body header#banner.banner.p-publications,
-html body header#banner.banner.p-datasets,
-html body header#banner.banner.p-cv,
-html body header#banner.banner.p-service,
-html body header#banner.banner.p-contact{
- height:280px!important;min-height:280px!important;max-height:280px!important;
-}
-@media(max-width:900px){
- html body header#banner.banner,
- html body header#banner.banner.home,
- html body header#banner.banner.p-home,
- html body header#banner.banner.p-research,
- html body header#banner.banner.p-publications,
- html body header#banner.banner.p-datasets,
- html body header#banner.banner.p-cv,
- html body header#banner.banner.p-service,
- html body header#banner.banner.p-contact{
-  height:250px!important;min-height:250px!important;max-height:250px!important;
- }
+html body header#banner.banner::before,
+html body header#banner.banner::after {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* CV banner — user supplied CV_banner_3840x960.jpg */
@@ -199,29 +115,44 @@ html body .banner.p-cv {
   background-repeat: no-repeat !important;
 }
 
-/* Home banner sharpness fix only — DO NOT change dimensions */
-html body header#banner.banner.home,
-html body header#banner.banner.p-home {
-  filter:none!important;
-  backdrop-filter:none!important;
-  -webkit-backdrop-filter:none!important;
-  image-rendering:auto!important;
-}
-html body header#banner.banner.home::before,
-html body header#banner.banner.home::after,
-html body header#banner.banner.p-home::before,
-html body header#banner.banner.p-home::after {
-  filter:none!important;
-  backdrop-filter:none!important;
-  -webkit-backdrop-filter:none!important;
+/* ------------------------------------------------------------------
+   Home banner — sharp in parallax mode (2026-11-05).
+   Above 900px the banner uses background-attachment: fixed (the parallax),
+   and for a fixed background the browser resolves background-size against
+   the whole viewport, not the 280px banner. The 1920x480 image embedded in
+   index.html was therefore being upscaled about 2.25x on a 1080p screen
+   (and its blurred far edge was the part on show), which is what made the
+   Home banner look soft. Desktop now loads a 3840x2160 version of the same
+   artwork, with the sharp key band at the top where the banner shows it.
+   Phones and reduced-motion browsers (attachment: scroll) keep the embedded
+   1920x480 image, which is drawn at 1:1 or smaller there. Banner height,
+   position and the parallax scripts are unchanged.
+   ------------------------------------------------------------------ */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  html body header#banner.banner.p-home {
+    background-image: url("assets/home-banner-desktop.jpg?v=20261105") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
 }
 
-/* Restore Home's original sharp background rendering; dimensions stay unchanged. */
-html body header#banner.banner.home,
-html body header#banner.banner.p-home {
-  background-size: auto 100% !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
+/* ------------------------------------------------------------------
+   Publications banner — the user's "documents between two laptops" image
+   (2026-11-06). Same mechanics as Home: desktop parallax mode loads a
+   3840x2160 version (assets/publications-banner-desktop.jpg) whose top band
+   is the wide crop shown in the 280px banner; phones and reduced-motion
+   browsers use the full picture (assets/publications-banner-mobile.jpg,
+   2160x1130) drawn to cover the banner. The banner is light, so index.html
+   gives it the navy heading/menu and a soft white fade behind the menu.
+   ------------------------------------------------------------------ */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  html body header#banner.banner.p-publications {
+    background-image: url("assets/publications-banner-desktop.jpg?v=20261106") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
 }
 
 /* Final Home rendering: preserve 280/250px dimensions; avoid competing fixed-background rasterization. */

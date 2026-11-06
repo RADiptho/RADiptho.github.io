@@ -1,33 +1,44 @@
 name: Sync Google Scholar
+# Reads the public Google Scholar profile into data/scholar.json twice a day and commits it.
+# Google Scholar refuses a share of automated requests (HTTP 403 / CAPTCHA). That is expected:
+# the script retries, keeps the last good data with its date, and reports the block as a
+# warning. The job only fails for an unexpected error (changed page markup, I/O problem).
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 2 * * *'
+    - cron: '23 3 * * *'    # 03:23 UTC
+    - cron: '41 15 * * *'   # 15:41 UTC
 permissions:
   contents: write
 concurrency:
-  group: scholar-daily-sync
+  group: scholar-sync
   cancel-in-progress: false
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check requests beautifulsoup4
       - name: Fetch Google Scholar data
-        run: python scripts/sync_scholar.py --user SSoTLJoAAAAJ --out data/scholar.json
+        env:
+          SCHOLAR_PROXY: ${{ secrets.SCHOLAR_PROXY }}
+        run: python scripts/sync_scholar.py --user SSoTLJoAAAAJ --out data/scholar.json --attempts 3
       - name: Commit refreshed data if changed
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/scholar.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Refresh Google Scholar metrics and sync status"
+          if git diff --cached --quiet; then
+            echo "data/scholar.json unchanged"
+          else
+            status=$(python -c "import json; print(json.load(open('data/scholar.json')).get('status'))")
+            git commit -m "Scholar sync: ${status}"
+            git pull --rebase origin main
             git push
           fi
