@@ -25,16 +25,6 @@
   }
 }
 
-/* Research & Expertise banner: uploaded image */
-html body header#banner.banner.p-research,
-html body #banner.p-research,
-html body .banner.p-research {
-  background-image: url("IMG_3282.jpeg") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-}
-
 /* site-motion-restored: smooth page transitions and subtle image entrance */
 html{scroll-behavior:smooth}
 @media(prefers-reduced-motion:no-preference){
@@ -101,64 +91,62 @@ html body header#banner.banner::after {
   -webkit-backdrop-filter: none !important;
 }
 
-/* CV banner — user supplied CV_banner_3840x960.jpg */
-html body header#banner.banner.p-cv,
-html body #banner.banner.p-cv,
-html body .banner.p-cv {
-  background-image: url("CV_banner_3840x960.jpg") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-}
-
 /* ------------------------------------------------------------------
-   Home banner — sharp in parallax mode (2026-11-05).
-   Above 900px the banner uses background-attachment: fixed (the parallax),
-   and for a fixed background the browser resolves background-size against
-   the whole viewport, not the 280px banner. The 1920x480 image embedded in
-   index.html was therefore being upscaled about 2.25x on a 1080p screen
-   (and its blurred far edge was the part on show), which is what made the
-   Home banner look soft. Desktop now loads a 3840x2160 version of the same
-   artwork, with the sharp key band at the top where the banner shows it.
-   Phones and reduced-motion browsers (attachment: scroll) keep the embedded
-   1920x480 image, which is drawn at 1:1 or smaller there. Banner height,
-   position and the parallax scripts are unchanged.
+   Page banners (2026-11-07) — one rendered set.
+   Every banner is a render of the same scene stage (navy floor, cool key light
+   from the upper left, emerald rim light and accents, soft particles, the same
+   grade), each with a subject that belongs to its page: Home — knowledge
+   network; Research — processor and neural network; Publications — the supplied
+   book-and-laptop photograph as a framed print beside journal volumes and an
+   open paper; Datasets — databases, data table, cube lattice and chart; CV —
+   profile card, graduation cap, medal, certificate and award; Service — review
+   shield, reviewed manuscripts, gears and people; Contact — envelope, paper
+   plane, message bubbles and location pin.
+
+   Above 900px the banner keeps background-attachment: fixed (the parallax). For a
+   fixed background the browser sizes the image against the viewport, so the
+   3840x2160 desktop renders are composed with their subjects in the top band,
+   which is what the 280px banner shows. Phones and tablets draw the 1800x1125
+   renders (subject centred) to cover the 250px banner.
+
+   Publications is the exception: the photograph must stay visible in full, so its
+   banner is a 560px-tall strip drawn at the banner height (background-size:
+   auto 100%, attachment scroll, the strip's own navy extends to the sides). It
+   still moves with the page through the scroll scripts. From 1340px the print
+   stands left of the heading; between 901 and 1339px, and on phones, it is
+   centred so that it is never cut by the viewport edge.
    ------------------------------------------------------------------ */
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  html body header#banner.banner.p-home {
-    background-image: url("assets/home-banner-desktop.jpg?v=20261105") !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-  }
-}
-
-/* ------------------------------------------------------------------
-   Publications banner — the supplied "open book and laptop" photo
-   (740x494), used at its native resolution; nothing is upscaled.
-   Phones and reduced-motion browsers draw the photo itself
-   (assets/publications-banner.png) to cover the banner, which only ever
-   scales it down. Desktop parallax mode (background-attachment: fixed,
-   where the browser sizes the background against the viewport) loads a
-   1920x1080 canvas holding the photo pixel-for-pixel on a navy field with
-   feathered edges (assets/publications-banner-desktop.png), so it is drawn
-   1:1 on a 1080p screen and scaled down on smaller ones. The shared navy
-   overlay and white heading apply here like on every other page.
-   ------------------------------------------------------------------ */
-@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  html body header#banner.banner.p-publications {
-    background-image: url("assets/publications-banner-desktop.png?v=20261106c") !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-  }
+  html body header#banner.banner.p-home { background-image: url("assets/banner-home-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-desktop.jpg?v=20261107") !important; }
 }
 @media (min-width: 901px) and (prefers-reduced-motion: reduce) {
-  /* no parallax: the same canvas drawn 1:1 from its top edge, so the banner looks identical */
-  html body header#banner.banner.p-publications {
-    background-image: url("assets/publications-banner-desktop.png?v=20261106c") !important;
-    background-size: 1920px auto !important;
-    background-position: center top !important;
-    background-repeat: no-repeat !important;
+  /* no parallax: draw the same desktop render from its top edge at the viewport width, so the band is identical */
+  html body header#banner.banner.p-home, html body header#banner.banner.p-research, html body header#banner.banner.p-datasets,
+  html body header#banner.banner.p-cv, html body header#banner.banner.p-service, html body header#banner.banner.p-contact {
+    background-attachment: scroll !important; background-size: 100% auto !important; background-position: center top !important; background-repeat: no-repeat !important;
   }
+  html body header#banner.banner.p-home { background-image: url("assets/banner-home-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-desktop.jpg?v=20261107") !important; }
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-desktop.jpg?v=20261107") !important; }
+}
+@media (min-width: 901px) {
+  html body header#banner.banner.p-publications {
+    background-image: url("assets/banner-publications-medium.jpg?v=20261107") !important; /* 901-1339px: print centred */
+    background-attachment: scroll !important;
+    background-size: auto 100% !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: #2F425A !important; /* the strip's top-row colour, so the scroll shift reveals no seam */
+  }
+}
+@media (min-width: 1340px) {
+  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-wide.jpg?v=20261107") !important; } /* print left of the heading */
 }

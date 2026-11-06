@@ -8,9 +8,9 @@ index.html                       the whole site (styles, scripts and most images
 banner-fix.css                   page-banner frame, parallax and per-page banner images
 site-reveal-2027.js              scroll-linked banner/image motion
 assets/logo.svg (+ png sizes)    the D monogram in the header and the favicon / touch icon
-assets/home-banner-desktop.jpg   3840x2160 Home banner used in desktop parallax mode
-assets/publications-banner.png, -desktop.png   Publications banner (supplied picture / desktop parallax canvas)
-IMG_3282.jpeg, CV_banner_3840x960.jpg   Research and CV banners
+assets/banner-<page>-desktop.jpg   3840x2160 page banners for desktop parallax mode (one rendered set)
+assets/banner-<page>-mobile.jpg    1800x1125 (Publications 1200x750) page banners for phones and tablets
+assets/banner-publications-wide.jpg, -medium.jpg   560px-tall Publications strips (>=1340px / 901-1339px)
 data/scholar.json                Google Scholar metrics and records, written by the sync job
 scripts/sync_scholar.py          reads the Scholar profile and updates data/scholar.json
 .github/workflows/scholar-sync.yml   runs the script twice a day (03:23 and 15:41 UTC) and on demand
@@ -27,40 +27,51 @@ scripts/sync_scholar.py          reads the Scholar profile and updates data/scho
 
 All links in `index.html` are relative, so the site works at either address.
 
-## 2. Contact form (FormSubmit) — one-time activation (~1 minute)
+## 2. Contact form (FormSubmit) — one-time activation
 
-The Contact page form is a real form: it posts to the FormSubmit AJAX endpoint
-`https://formsubmit.co/ajax/dipthobracu02@gmail.com` from the page itself (no mail app,
-no page reload) and the message is delivered to that Gmail inbox. FormSubmit is a free
-form backend for static sites; it needs no account, no API key and no secret in the
-repository — the address in the `action` attribute is the public contact address that is
-already shown on the page.
+The Contact page form is a real form. It is delivered by FormSubmit (https://formsubmit.co), a
+form backend for static sites that needs no account, no API key and no secret in the
+repository: the only thing in the page is the public contact address, which is already shown
+on the page. Two delivery paths are built in, both real submissions from the page itself (no
+mail app):
 
-**Activation (once).** FormSubmit delivers to an address only after its owner has confirmed
-it. After this version is live:
+1. **Background (AJAX) submission.** The page posts JSON to
+   `https://formsubmit.co/ajax/dipthobracu02@gmail.com` with `Content-Type: application/json`
+   and `Accept: application/json`, exactly as FormSubmit documents, and reports FormSubmit's
+   JSON answer. The visitor stays on the page.
+2. **Normal submission.** If the browser cannot complete that request — FormSubmit answers
+   without CORS headers until the address has been activated, and some networks block
+   cross-origin requests — the page posts the form the ordinary way to
+   `https://formsubmit.co/dipthobracu02@gmail.com`, which every browser allows cross-origin.
+   FormSubmit then shows its activation notice (first time only) or, once activated, sends
+   the visitor back to `https://radiptho.github.io/?sent=1`, where the page opens Contact and
+   shows the confirmation.
 
-1. Open https://radiptho.github.io/#contact and send one message through the form
-   (any text; this first submission is used by FormSubmit to start the activation and is
-   not delivered). The page will show "waiting for a one-time activation by the site owner".
-2. FormSubmit emails `dipthobracu02@gmail.com` an activation link ("Activate form"). Click it.
-   (Check the spam folder if it does not arrive within a few minutes.)
-3. Send one more test message from the live site; it now arrives in the inbox with the
-   visitor's address as Reply-To and the chosen purpose in the subject line.
+Success is reported only after FormSubmit has confirmed it (JSON `success: true`, or the
+`?sent=1` return). Everything else — activation pending, a service error, no connection — is
+shown as an error with the direct address as the fallback.
 
-Optional: the activation email also contains a random-looking alias for the address.
-Replacing `dipthobracu02@gmail.com` in the form's `action` attribute (one occurrence in
-`index.html`) with that alias hides the address from the page source; everything else stays
-the same.
+**Activation (once).** FormSubmit delivers to an address only after its owner has confirmed it:
 
-**What the page does.** Required fields (name, valid email address, message of at least 20
-characters) are checked before anything is sent; the Send button is locked with a
-"Sending…" state until FormSubmit answers, so a double click cannot send twice; a message is
-reported as sent only when FormSubmit confirms `success: true` — any other answer
-(activation pending, service error, no connection) is shown as an error with the direct
-email address as the fallback. Spam protection: a hidden honeypot field (`_honey`; a
-filled value is discarded both by the page and by FormSubmit) and a three-second minimum
-fill time. The reCAPTCHA page is disabled (`_captcha=false`) because the form is submitted
-in the background.
+1. Open https://radiptho.github.io/#contact and send one message through the form. FormSubmit
+   uses this first submission to start the activation (it is not delivered). You will either
+   see the page's "waiting for a one-time activation" message or FormSubmit's own page saying
+   that an activation email has been sent.
+2. Open the email FormSubmit sends to `dipthobracu02@gmail.com` and click **Activate form**
+   (check the spam folder if it has not arrived after a few minutes).
+3. Send one more message from the live site. It arrives in the inbox with the visitor's address
+   as Reply-To and the chosen purpose in the subject line.
+
+Optional: the activation email also contains a random-looking alias for the address. Replacing
+`dipthobracu02@gmail.com` in the form's `action` attribute (one occurrence in `index.html`) with
+that alias hides the address from the page source; the script derives the AJAX endpoint from it.
+
+**Validation and spam protection.** Name, a valid email address and a message of at least 20
+characters are required and checked before anything is sent; the Send button is locked with a
+"Sending…" state until the service answers, so a double click cannot send twice. A hidden
+honeypot field (`_honey`; a filled value is discarded by the page and by FormSubmit) and a
+three-second minimum fill time stop simple bots. The reCAPTCHA page is disabled
+(`_captcha=false`) so the normal submission returns to the site without an interstitial.
 
 ## 3. Google Scholar synchronization
 
@@ -100,30 +111,34 @@ URL; the workflow passes it to the script.
 
 Run locally: `pip install requests beautifulsoup4 && python scripts/sync_scholar.py`.
 
-## 4. Banners and parallax
+## 4. Banners
 
-Above 900px the banner uses `background-attachment: fixed` for the parallax. For a fixed
-background the browser sizes the image against the whole viewport, not the 280px banner, so
-the 1920x480 image embedded in `index.html` was being upscaled ~2.25x on a 1080p screen and
-looked soft. `banner-fix.css` therefore loads `assets/home-banner-desktop.jpg` (3840x2160,
-same artwork, sharp key band at the top) for desktop parallax mode, while phones and
-reduced-motion browsers keep the embedded image at 1:1. Banner height is unchanged
-(280px desktop, 250px up to 900px).
+All seven page banners are renders of one scene stage (three.js, headless Chromium): the same
+navy floor, cool key light from the upper left, emerald rim light and accents, soft particles
+and the same grade, each with a subject that belongs to its page — Home: knowledge network;
+Research & Expertise: processor with circuit traces and a neural network; Publications: the
+supplied book-and-laptop photograph as a framed print beside journal volumes and an open
+paper; Datasets: databases, data table, cube lattice and chart; CV: profile card, graduation
+cap, medal, certificate and award; Service: review shield, reviewed manuscripts, gears and
+people; Contact: envelope, paper plane, message bubbles and location pin. Measured on the
+rendered banners, mean brightness, saturation and hue are within a few percent of each other.
+The heading treatment (white, same shadow) and the emerald underline are shared in
+`banner-fix.css`, and the navy overlay in `index.html` is the same on every page.
 
-The Publications banner uses the same mechanism with the supplied "open book and laptop"
-photo (740x494) at its native resolution: `assets/publications-banner.png` is the photo
-itself, pixel for pixel (phones and reduced-motion browsers; only ever scaled down), and
-`assets/publications-banner-desktop.png` is a 1920x1080 canvas holding the photo 1:1,
-centred on a navy field with feathered edges, for desktop parallax mode (pixel-for-pixel on
-a 1080p screen, scaled down on smaller ones). Nothing is upscaled, sharpened or enhanced.
-A wider original (1920px or more) could be dropped in to run edge to edge.
+Above 900px the banner keeps `background-attachment: fixed` (the parallax). For a fixed
+background the browser sizes the image against the whole viewport, so the 3840x2160 desktop
+renders are composed with their subjects in the top band, which is what the 280px banner shows.
+Phones and tablets draw the 1800x1125 renders (subject centred) to cover the 250px banner.
+Reduced-motion browsers get the same desktop render from its top edge without the parallax.
+Banner height is unchanged (280px desktop, 250px up to 900px).
 
-**One treatment for every banner.** All seven page banners share the same overlay — a
-single navy gradient (`.banner::after` in `index.html`: stronger behind the menu, light in
-the middle, slightly stronger at the foot) — the same white heading with the same shadow
-and the same emerald bar (`banner-fix.css`). The per-page black gradients that used to sit
-on the Research and CV images and the white "light" treatment of the Publications and
-Service banners are gone, so each page keeps its own picture but reads as one system.
+Publications is the exception because the supplied photograph has to stay visible in full: its
+banner is a 560px-tall strip drawn at the banner height (`background-size: auto 100%`,
+attachment `scroll`; the strip's own navy extends to the sides on very wide screens), so the
+print is never cropped by the viewport height. From 1340px the print stands left of the
+heading (`banner-publications-wide.jpg`); between 901 and 1339px, and on phones, it is centred
+(`banner-publications-medium.jpg`, `banner-publications-mobile.jpg`). The photograph itself is
+drawn at or below its native 740x494 size everywhere and was not upscaled or enhanced.
 
 ## 5. Colour system
 
