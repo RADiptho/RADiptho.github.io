@@ -363,3 +363,16 @@ main small, section small, main .muted, section .muted { font-size: 12px !import
 /* the banner headings are not body typography: restated after the compact rules so they keep their size */
 main .banner-title .banner-h, section .banner-title .banner-h { font-size: clamp(34px, 3.9vw, 62px) !important; line-height: 1.15 !important; }
 @media (max-width: 900px) { main .banner-title .banner-h, section .banner-title .banner-h { font-size: min(34px, 9.7vw) !important; } }
+
+/* HOME_PHOTO_SIZE_RESTORE_2026 — restore the intended prominent desktop portrait without changing content */
+@media (min-width: 861px) {
+  .view.home .home-grid {
+    grid-template-columns: minmax(250px, 28%) minmax(0, 1fr) !important;
+    gap: 12px clamp(28px, 3vw, 42px) !important;
+  }
+  .view.home .home-grid img.photo {
+    width: 100% !important;
+    max-width: 320px !important;
+    justify-self: start !important;
+  }
+}
