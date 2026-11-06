@@ -78,7 +78,7 @@ main small, section small, main .muted, section .muted { font-size: 12px !import
   main h2, section h2 { font-size: 20px !important; }
   main h3, section h3 { font-size: 16px !important; }
 }
-</style><link rel="icon" type="image/svg+xml" href="assets/logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><meta name="theme-color" content="#0F2A44"><link rel="stylesheet" href="banner-fix.css?v=20261107">
+</style><link rel="icon" type="image/svg+xml" href="assets/logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><meta name="theme-color" content="#0F2A44"><link rel="stylesheet" href="banner-fix.css?v=20261108">
 </head><body><title>Md. Rakib Ahammed Diptho</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Md. Rakib Ahammed Diptho, Research Assistant, Department of Computer Science and Engineering, Jahangirnagar University: research, publications, CV, service and contact.">
@@ -155,19 +155,19 @@ b, strong { font-weight: 700; }
 .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
 /* ---------- banner + menu ----------
-   Page banners are one rendered set (assets/banner-*.jpg): the same navy stage, lighting and emerald accents
-   with a different subject per page. These rules carry the phone/tablet images; banner-fix.css adds the
-   desktop images and the parallax behaviour. */
+   Page banners are one rendered set (assets/banner-*): the same navy stage, lighting and emerald accents with
+   a different subject per page. These rules carry the narrow strips (phones, tablets and narrow desktops);
+   banner-fix.css composes the desktop banners from edge-anchored subject layers over a shared base strip. */
 .banner { position: relative; display: flex; flex-direction: column; background: var(--banner) center / cover no-repeat; color: var(--banner-text); min-height: 350px; }
 .banner.home { min-height: clamp(200px, 34vh, 350px); }
 @media (max-width: 760px) { .banner { min-height: 250px; } .banner.home { min-height: 200px; } }
-.banner.p-home { background-image: url("assets/banner-home-mobile.jpg?v=20261107"); }
-.banner.p-research { background-image: url("assets/banner-research-mobile.jpg?v=20261107"); }
-.banner.p-publications { background-image: url("assets/banner-publications-mobile.jpg?v=20261107"); background-color: #233752; }
-.banner.p-cv { background-image: url("assets/banner-cv-mobile.jpg?v=20261107"); }
-.banner.p-datasets { background-image: url("assets/banner-datasets-mobile.jpg?v=20261107"); }
-.banner.p-service { background-image: url("assets/banner-service-mobile.jpg?v=20261107"); }
-.banner.p-contact { background-image: url("assets/banner-contact-mobile.jpg?v=20261107"); }
+.banner.p-home { background-image: url("assets/banner-home-narrow.jpg?v=20261108"); }
+.banner.p-research { background-image: url("assets/banner-research-narrow.jpg?v=20261108"); }
+.banner.p-publications { background-image: url("assets/banner-publications-narrow.jpg?v=20261108"); }
+.banner.p-cv { background-image: url("assets/banner-cv-narrow.jpg?v=20261108"); }
+.banner.p-datasets { background-image: url("assets/banner-datasets-narrow.jpg?v=20261108"); }
+.banner.p-service { background-image: url("assets/banner-service-narrow.jpg?v=20261108"); }
+.banner.p-contact { background-image: url("assets/banner-contact-narrow.jpg?v=20261108"); }
 .banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,42,68,.55) 0%, rgba(15,42,68,.22) 40%, rgba(15,42,68,.18) 70%, rgba(15,42,68,.34) 100%); pointer-events: none; }
 .topbar { position: relative; z-index: 3; }
 .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }

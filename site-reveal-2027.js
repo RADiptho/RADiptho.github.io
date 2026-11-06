@@ -24,7 +24,7 @@
       const y=Math.max(0,window.scrollY||window.pageYOffset||0);
       if(banner){
         const travel=Math.min(y,1000);
-        banner.style.setProperty('background-position','center calc(50% + '+(travel*.48).toFixed(1)+'px)','important');
+        banner.style.setProperty('background-position-y','calc(50% + '+(travel*.48).toFixed(1)+'px)','important'); // vertical drift only: the banner is layered, each layer keeps its own horizontal anchor
       }
       if(logo){
         const shift=Math.min(y*.11,22);

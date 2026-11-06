@@ -37,12 +37,6 @@ html{scroll-behavior:smooth}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.view img{animation:none!important;transition:none!important}}
 
-/* Actual banner parallax: scroll-driven CSS background position */
-@media(prefers-reduced-motion:no-preference){
-  html body #banner.banner {background-attachment:fixed!important;background-size:cover!important;background-position:center center!important}
-}
-@media(max-width:900px){html body #banner.banner{background-attachment:scroll!important}}
-
 /* ------------------------------------------------------------------
    Unified top-banner frame on every page (2026-10-29, consolidated 2026-11-05).
    Desktop: 280px. Up to 900px: 250px. The three earlier height blocks
@@ -92,61 +86,86 @@ html body header#banner.banner::after {
 }
 
 /* ------------------------------------------------------------------
-   Page banners (2026-11-07) — one rendered set.
-   Every banner is a render of the same scene stage (navy floor, cool key light
-   from the upper left, emerald rim light and accents, soft particles, the same
-   grade), each with a subject that belongs to its page: Home — knowledge
-   network; Research — processor and neural network; Publications — the supplied
-   book-and-laptop photograph as a framed print beside journal volumes and an
-   open paper; Datasets — databases, data table, cube lattice and chart; CV —
-   profile card, graduation cap, medal, certificate and award; Service — review
-   shield, reviewed manuscripts, gears and people; Contact — envelope, paper
-   plane, message bubbles and location pin.
+   Page banners (2026-11-08) — one rendered set, composed for the banner itself.
+   Every image is a render of the same stage (navy floor, cool key light from the
+   upper left, emerald rim light and accents, same grade) with a page-specific
+   subject: Home — the AI > ML > DL > Research progression; Research — computer
+   vision on a lab monitor with its processor, a microscope and results panel;
+   Publications — the supplied book-and-laptop photograph as a framed print,
+   manuscripts, journal volumes and an open paper; Datasets — database stacks, a
+   data table, a cube lattice and charts; CV — profile card, graduation cap,
+   medal, certificate, award and folder; Service — an annotated manuscript under
+   review, the reviewer's seal, reviewed manuscripts, journal volumes and a
+   magnifier; Contact — envelope and letter, paper plane, @ sign and contact card.
 
-   Above 900px the banner keeps background-attachment: fixed (the parallax). For a
-   fixed background the browser sizes the image against the viewport, so the
-   3840x2160 desktop renders are composed with their subjects in the top band,
-   which is what the 280px banner shows. Phones and tablets draw the 1800x1125
-   renders (subject centred) to cover the 250px banner.
-
-   Publications is the exception: the photograph must stay visible in full, so its
-   banner is a 560px-tall strip drawn at the banner height (background-size:
-   auto 100%, attachment scroll, the strip's own navy extends to the sides). It
-   still moves with the page through the scroll scripts. From 1340px the print
-   stands left of the heading; between 901 and 1339px, and on phones, it is
-   centred so that it is never cut by the viewport edge.
+   Nothing is cropped by CSS: every strip is drawn at the banner height
+   (background-size: auto 100%, attachment scroll) and was composed for that
+   height, with the top 22% (the navigation bar) left quiet and every subject
+   standing fully inside the frame. Up to 900px (phones, tablets) and on narrow
+   desktops each page uses one centred strip (assets/banner-<page>-narrow.jpg).
+   From the width at which the subjects fit beside the page heading and its
+   underline, the desktop banner is composed from three layers: a left subject and a right subject
+   (transparent WebP, anchored 2% from the banner edges so they use the width)
+   over the shared base strip (assets/banner-base.jpg). A compact version of the
+   subjects is used first, the regular one once there is room; the breakpoints
+   are per page because the headings differ in width. Home has no heading and
+   uses its own full strip from 1120px. The scroll scripts move only the
+   vertical position, so the layers keep their anchors.
    ------------------------------------------------------------------ */
-@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  html body header#banner.banner.p-home { background-image: url("assets/banner-home-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-research { background-image: url("assets/banner-research-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-service { background-image: url("assets/banner-service-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-desktop.jpg?v=20261107") !important; }
+html body header#banner.banner {
+  background-attachment: scroll !important;
+  background-size: auto 100% !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-color: #16304B !important; /* the strips' top-row navy: the drift on scroll reveals no seam */
 }
-@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
-  /* no parallax: draw the same desktop render from its top edge at the viewport width, so the band is identical */
-  html body header#banner.banner.p-home, html body header#banner.banner.p-research, html body header#banner.banner.p-datasets,
-  html body header#banner.banner.p-cv, html body header#banner.banner.p-service, html body header#banner.banner.p-contact {
-    background-attachment: scroll !important; background-size: 100% auto !important; background-position: center top !important; background-repeat: no-repeat !important;
-  }
-  html body header#banner.banner.p-home { background-image: url("assets/banner-home-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-research { background-image: url("assets/banner-research-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-service { background-image: url("assets/banner-service-desktop.jpg?v=20261107") !important; }
-  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-desktop.jpg?v=20261107") !important; }
+@media (min-width: 1090px) {
+  html body header#banner.banner.p-home { background-image: url("assets/banner-home-wide.jpg?v=20261108") !important; }
 }
-@media (min-width: 901px) {
-  html body header#banner.banner.p-publications {
-    background-image: url("assets/banner-publications-medium.jpg?v=20261107") !important; /* 901-1339px: print centred */
-    background-attachment: scroll !important;
-    background-size: auto 100% !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-color: #2F425A !important; /* the strip's top-row colour, so the scroll shift reveals no seam */
-  }
+/* Narrow desktops and landscape tablets (901-1299px): the subjects stand at the banner edges in a small
+   size, and the heading's underline is shortened to 48% of the width so that it never runs across them.
+   From 1300px the underline is its usual 742px; the compact and regular subjects are used only from the
+   width at which they clear it. */
+@media (min-width: 901px) and (max-width: 1299px) {
+  .banner:not(.home) .banner-title .bar { width: min(742px, 48%) !important; }
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-left-m.webp?v=20261108"), url("assets/banner-research-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-left-m.webp?v=20261108"), url("assets/banner-publications-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-left-m.webp?v=20261108"), url("assets/banner-datasets-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-left-m.webp?v=20261108"), url("assets/banner-cv-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-left-m.webp?v=20261108"), url("assets/banner-service-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-left-m.webp?v=20261108"), url("assets/banner-contact-right-m.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
 }
-@media (min-width: 1340px) {
-  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-wide.jpg?v=20261107") !important; } /* print left of the heading */
+@media (min-width: 1040px) and (max-width: 1299px) {
+  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-left-s.webp?v=20261108"), url("assets/banner-publications-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-left-s.webp?v=20261108"), url("assets/banner-datasets-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-left-s.webp?v=20261108"), url("assets/banner-cv-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-left-s.webp?v=20261108"), url("assets/banner-service-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-left-s.webp?v=20261108"), url("assets/banner-contact-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1230px) and (max-width: 1299px) {
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-left-s.webp?v=20261108"), url("assets/banner-research-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1300px) {
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-left-s.webp?v=20261108"), url("assets/banner-research-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-left-s.webp?v=20261108"), url("assets/banner-publications-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-left-s.webp?v=20261108"), url("assets/banner-datasets-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-left-s.webp?v=20261108"), url("assets/banner-cv-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-left-s.webp?v=20261108"), url("assets/banner-service-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-left-s.webp?v=20261108"), url("assets/banner-contact-right-s.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1320px) {
+  html body header#banner.banner.p-service { background-image: url("assets/banner-service-left.webp?v=20261108"), url("assets/banner-service-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1350px) {
+  html body header#banner.banner.p-research { background-image: url("assets/banner-research-left.webp?v=20261108"), url("assets/banner-research-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1360px) {
+  html body header#banner.banner.p-contact { background-image: url("assets/banner-contact-left.webp?v=20261108"), url("assets/banner-contact-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1410px) {
+  html body header#banner.banner.p-cv { background-image: url("assets/banner-cv-left.webp?v=20261108"), url("assets/banner-cv-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+}
+@media (min-width: 1450px) {
+  html body header#banner.banner.p-publications { background-image: url("assets/banner-publications-left.webp?v=20261108"), url("assets/banner-publications-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
+  html body header#banner.banner.p-datasets { background-image: url("assets/banner-datasets-left.webp?v=20261108"), url("assets/banner-datasets-right.webp?v=20261108"), url("assets/banner-base.jpg?v=20261108") !important; background-position: 2% 50%, 98% 50%, 50% 50% !important; background-size: auto 100%, auto 100%, auto 100% !important; background-repeat: no-repeat, no-repeat, no-repeat !important; }
 }

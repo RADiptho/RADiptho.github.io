@@ -8,9 +8,10 @@ index.html                       the whole site (styles, scripts and most images
 banner-fix.css                   page-banner frame, parallax and per-page banner images
 site-reveal-2027.js              scroll-linked banner/image motion
 assets/logo.svg (+ png sizes)    the D monogram in the header and the favicon / touch icon
-assets/banner-<page>-desktop.jpg   3840x2160 page banners for desktop parallax mode (one rendered set)
-assets/banner-<page>-mobile.jpg    1800x1125 (Publications 1200x750) page banners for phones and tablets
-assets/banner-publications-wide.jpg, -medium.jpg   560px-tall Publications strips (>=1340px / 901-1339px)
+assets/banner-base.jpg           8000x560 shared desktop stage strip (drawn at the 280px banner height)
+assets/banner-home-wide.jpg      8000x560 Home strip: the AI > ML > DL > Research progression
+assets/banner-<page>-left/right[-s|-m].webp   desktop subject layers (regular, compact, small), transparent WebP
+assets/banner-<page>-narrow.jpg  3400x750 phone / tablet / narrow-desktop strips (drawn at the 250px height)
 data/scholar.json                Google Scholar metrics and records, written by the sync job
 scripts/sync_scholar.py          reads the Scholar profile and updates data/scholar.json
 .github/workflows/scholar-sync.yml   runs the script twice a day (03:23 and 15:41 UTC) and on demand
@@ -113,32 +114,41 @@ Run locally: `pip install requests beautifulsoup4 && python scripts/sync_scholar
 
 ## 4. Banners
 
-All seven page banners are renders of one scene stage (three.js, headless Chromium): the same
-navy floor, cool key light from the upper left, emerald rim light and accents, soft particles
-and the same grade, each with a subject that belongs to its page — Home: knowledge network;
-Research & Expertise: processor with circuit traces and a neural network; Publications: the
-supplied book-and-laptop photograph as a framed print beside journal volumes and an open
-paper; Datasets: databases, data table, cube lattice and chart; CV: profile card, graduation
-cap, medal, certificate and award; Service: review shield, reviewed manuscripts, gears and
-people; Contact: envelope, paper plane, message bubbles and location pin. Measured on the
-rendered banners, mean brightness, saturation and hue are within a few percent of each other.
-The heading treatment (white, same shadow) and the emerald underline are shared in
-`banner-fix.css`, and the navy overlay in `index.html` is the same on every page.
+All banner imagery is rendered from one scene stage (three.js in headless Chromium): a navy floor, a
+cool key light from the upper left, an emerald rim light and emerald accents, soft particles and the
+same grade. Each page has its own subject: Home — the AI → ML → DL → Research progression (an AI
+core, a data-to-model panel, a deep network and an open paper with a magnifier, on labelled plinths
+joined by a flow line); Research & Expertise — computer vision on a lab monitor with its processor,
+and a microscope with a results panel and notebook; Publications — the supplied book-and-laptop
+photograph as a framed print with manuscripts, and journal volumes with an open paper; Datasets —
+database stacks with a data table, and a cube lattice with charts; CV — profile card, graduation cap
+and medal, and a certificate with an award and folder; Service — an annotated manuscript under
+review with the reviewer's seal and pen, and reviewed manuscripts with journal volumes and a
+magnifier; Contact — an envelope with its letter and a paper plane, and an @ sign with a contact
+card. The heading treatment (white, same shadow), the emerald underline and the navy overlay are
+shared by every page.
 
-Above 900px the banner keeps `background-attachment: fixed` (the parallax). For a fixed
-background the browser sizes the image against the whole viewport, so the 3840x2160 desktop
-renders are composed with their subjects in the top band, which is what the 280px banner shows.
-Phones and tablets draw the 1800x1125 renders (subject centred) to cover the 250px banner.
-Reduced-motion browsers get the same desktop render from its top edge without the parallax.
-Banner height is unchanged (280px desktop, 250px up to 900px).
+**Composed for the banner, never cropped by CSS.** Every image is drawn at the banner height
+(`background-size: auto 100%`, attachment `scroll`), was composed for that height with the top 22%
+(the navigation bar) kept quiet, and every subject stands fully inside the frame with a margin.
+Up to 900px, and for Home below 1090px, each page uses one centred strip
+(`assets/banner-<page>-narrow.jpg`). From 901px the desktop banner is composed from three
+background layers: a left subject and a right subject (transparent WebP, anchored 2% from the
+banner edges, so they use the width at any size) over the shared base strip
+(`assets/banner-base.jpg`). Three sizes of the subjects exist — small (`-m`), compact (`-s`) and
+regular — and the breakpoints are per page, chosen so that the subjects always clear the heading
+text and its underline (headings differ in width; "Research & Expertise" is the widest). Between
+901 and 1299px the underline is shortened to 48% of the width for the same reason. Home has no
+heading and uses its own full strip from 1090px. The two scroll scripts move only the vertical
+position of the background (`background-position-y`), so the layers keep their horizontal anchors.
+Banner heights are unchanged: 280px desktop, 250px up to 900px.
 
-Publications is the exception because the supplied photograph has to stay visible in full: its
-banner is a 560px-tall strip drawn at the banner height (`background-size: auto 100%`,
-attachment `scroll`; the strip's own navy extends to the sides on very wide screens), so the
-print is never cropped by the viewport height. From 1340px the print stands left of the
-heading (`banner-publications-wide.jpg`); between 901 and 1339px, and on phones, it is centred
-(`banner-publications-medium.jpg`, `banner-publications-mobile.jpg`). The photograph itself is
-drawn at or below its native 740x494 size everywhere and was not upscaled or enhanced.
+The photograph on the Publications page is drawn at or below its native 740x494 size everywhere
+and was not upscaled or enhanced.
+
+A rendered-page QA pass (Playwright, widths 360–2560, reduced motion included) checks for every
+page that the subjects clear the viewport edges, the navigation zone, the heading text and the
+underline; the sheets for the last run are in the delivery package.
 
 ## 5. Colour system
 
