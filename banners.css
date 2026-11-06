@@ -1,0 +1,365 @@
+/* banners.css — generated from the banner renders (scratch: banners/genfx.py). Live-effect layer for the seven
+   section banners: soft glows on the subjects, a data pulse travelling AI -> ML -> DL -> RESEARCH on Home, data
+   packets on Datasets, a message in flight on Contact, a slow light sweep, a few drifting motes. Positions are
+   CSS pixels from the banner centre (x) and top (y) and are restated per breakpoint, because each breakpoint
+   has its own precomposed image. The image itself is never moved; prefers-reduced-motion hides the whole layer. */
+.fx { position: absolute; left: 50%; top: 0; width: 0; height: 0; z-index: 3; pointer-events: none; }
+.fx > * { position: absolute; display: none; left: var(--x, 0px); top: var(--y, 0px); width: var(--s, 60px); height: var(--s, 60px); margin: calc(var(--s, 60px) / -2) 0 0 calc(var(--s, 60px) / -2); border-radius: 50%; mix-blend-mode: screen; will-change: transform, opacity; }
+.fx > .on { display: block; }
+.fx .node, .fx .g1, .fx .g2, .fx .g3 { background: radial-gradient(circle, rgba(142,227,195,.55) 0%, rgba(142,227,195,.22) 32%, rgba(142,227,195,0) 70%); animation: fxGlow 6.4s ease-in-out infinite; opacity: .55; }
+.fx .g2 { background: radial-gradient(circle, rgba(95,211,230,.5) 0%, rgba(95,211,230,.2) 32%, rgba(95,211,230,0) 70%); animation-duration: 7.3s; animation-delay: -2.1s; }
+.fx .g3 { animation-duration: 5.7s; animation-delay: -3.4s; }
+.fx .node { animation: fxNode var(--t, 7.6s) ease-in-out infinite; opacity: .3; }
+.fx .pulse { --s: 12px; left: 0; top: 0; margin: 0; background: radial-gradient(circle, #FFFFFF 0%, rgba(142,227,195,.95) 28%, rgba(142,227,195,0) 70%); box-shadow: 0 0 10px 3px rgba(142,227,195,.55); offset-rotate: 0deg; animation: fxTravel var(--t, 7.6s) linear infinite; opacity: .95; }
+.fx .pulse.p2 { --s: 8px; opacity: .55; animation-delay: -.22s; box-shadow: 0 0 8px 2px rgba(142,227,195,.4); }
+.fx .p-cyan, .fx .pulse.cy { background: radial-gradient(circle, #FFFFFF 0%, rgba(95,211,230,.95) 28%, rgba(95,211,230,0) 70%); box-shadow: 0 0 10px 3px rgba(95,211,230,.5); }
+.fx .sweep { display: block; left: -1500px; top: -200px; width: 3000px; height: 700px; margin: 0; border-radius: 0; mix-blend-mode: screen; opacity: 1; background: linear-gradient(104deg, rgba(255,255,255,0) 44%, rgba(214,236,255,.05) 49%, rgba(214,236,255,.075) 50%, rgba(214,236,255,.05) 51%, rgba(255,255,255,0) 56%); animation: fxSweep 22s linear infinite; }
+.fx .pt { display: block; --s: 4px; background: rgba(189,238,221,.85); box-shadow: 0 0 6px 1px rgba(189,238,221,.5); animation: fxDrift 11s ease-in-out infinite; opacity: 0; }
+.fx .pt.b { animation-duration: 13s; animation-delay: -5s; background: rgba(95,211,230,.8); box-shadow: 0 0 6px 1px rgba(95,211,230,.45); }
+.fx .pt.c { animation-duration: 15s; animation-delay: -9s; --s: 3px; }
+@supports not (offset-path: path('M0 0 L10 10')) { .fx .pulse { display: none !important; } }
+@keyframes fxGlow { 0%, 100% { opacity: .38; transform: scale(.9); } 50% { opacity: .72; transform: scale(1.1); } }
+@keyframes fxNode { 0%, 38% { opacity: .22; transform: scale(.92); } 50% { opacity: .85; transform: scale(1.14); } 64%, 100% { opacity: .22; transform: scale(.92); } }
+@keyframes fxTravel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes fxSweep { 0% { transform: translateX(-900px); } 38% { transform: translateX(900px); } 100% { transform: translateX(900px); } }
+@keyframes fxDrift { 0% { opacity: 0; transform: translateY(14px); } 18% { opacity: .9; } 55% { opacity: .55; } 100% { opacity: 0; transform: translateY(-40px); } }
+@media (max-width: 600px) {
+  .p-home .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -91px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-143 236 L-117 236 L-39 236 L39 236 L111 236 L138 236'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -116px; --y: 203px; --s: 48px; --t: 7.6s; animation-delay: -3.09s; }
+  .p-home .fx .node.n2 { --x: -35px; --y: 192px; --s: 48px; --t: 7.6s; animation-delay: -0.99s; }
+  .p-home .fx .node.n3 { --x: 38px; --y: 191px; --s: 48px; --t: 7.6s; animation-delay: 1.13s; }
+  .p-home .fx .node.n4 { --x: 123px; --y: 182px; --s: 48px; --t: 7.6s; animation-delay: 3.09s; }
+  .p-research .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-research .fx .g1 { --x: -109px; --y: 204px; --s: 62px; }
+  .p-research .fx .g2 { --x: 102px; --y: 209px; --s: 52px; }
+  .p-publications .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -7px; --y: 232px; width: 101px; height: 26px; margin: -13px 0 0 -50px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 66px; --y: 178px; --s: 26px; }
+  .p-datasets .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: 66px; --y: 190px; --s: 52px; }
+  .p-datasets .fx .g3 { --x: -125px; --y: 162px; --s: 52px; }
+  .p-datasets .fx .pulse { offset-path: path('M66 190 Q26 168 -15 198'); --t: 3.6s; }
+  .p-cv .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -67px; --y: 211px; --s: 50px; }
+  .p-cv .fx .g2 { --x: 122px; --y: 209px; --s: 36px; }
+  .p-service .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-service .fx .g1 { --x: 65px; --y: 224px; --s: 50px; }
+  .p-service .fx .g2 { --x: 87px; --y: 206px; --s: 28px; }
+  .p-contact .fx .pt.a { --x: -139px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 135px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 102px; --y: 74px; }
+  .p-contact .fx .g1 { --x: -116px; --y: 190px; --s: 52px; }
+  .p-contact .fx .g2 { --x: 146px; --y: 183px; --s: 34px; }
+  .p-contact .fx .g3 { --x: -33px; --y: 191px; --s: 46px; }
+  .p-contact .fx .pulse { offset-path: path('M112 211 Q129 161 146 183'); --t: 4.8s; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .p-home .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -160px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-252 236 L-214 236 L-71 236 L71 236 L206 236 L244 236'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -213px; --y: 191px; --s: 68px; --t: 7.6s; animation-delay: -3.22s; }
+  .p-home .fx .node.n2 { --x: -65px; --y: 177px; --s: 68px; --t: 7.6s; animation-delay: -1.04s; }
+  .p-home .fx .node.n3 { --x: 70px; --y: 178px; --s: 68px; --t: 7.6s; animation-delay: 1.14s; }
+  .p-home .fx .node.n4 { --x: 224px; --y: 166px; --s: 68px; --t: 7.6s; animation-delay: 3.22s; }
+  .p-research .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-research .fx .g1 { --x: -109px; --y: 204px; --s: 62px; }
+  .p-research .fx .g2 { --x: 102px; --y: 209px; --s: 52px; }
+  .p-research .fx .g3 { --x: 206px; --y: 176px; --s: 60px; }
+  .p-publications .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -195px; --y: 232px; width: 145px; height: 26px; margin: -13px 0 0 -72px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 142px; --y: 143px; --s: 60px; }
+  .p-publications .fx .g3 { --x: 24px; --y: 216px; --s: 36px; }
+  .p-datasets .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: 29px; --y: 181px; --s: 66px; }
+  .p-datasets .fx .g2 { --x: 269px; --y: 130px; --s: 60px; }
+  .p-datasets .fx .g3 { --x: -190px; --y: 128px; --s: 80px; }
+  .p-datasets .fx .pulse { offset-path: path('M29 181 Q-22 159 -73 192'); --t: 3.6s; }
+  .p-cv .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -95px; --y: 211px; --s: 50px; }
+  .p-cv .fx .g2 { --x: 93px; --y: 209px; --s: 36px; }
+  .p-cv .fx .g3 { --x: 190px; --y: 136px; --s: 78px; }
+  .p-service .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-service .fx .g1 { --x: 76px; --y: 224px; --s: 70px; }
+  .p-service .fx .g2 { --x: 105px; --y: 199px; --s: 38px; }
+  .p-service .fx .g3 { --x: -185px; --y: 168px; --s: 62px; }
+  .p-contact .fx .pt.a { --x: -264px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 260px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 180px; --y: 74px; }
+  .p-contact .fx .g1 { --x: -190px; --y: 155px; --s: 114px; }
+  .p-contact .fx .g2 { --x: 264px; --y: 122px; --s: 78px; }
+  .p-contact .fx .g3 { --x: -60px; --y: 188px; --s: 50px; }
+  .p-contact .fx .pulse { offset-path: path('M170 206 Q217 100 264 122'); --t: 4.8s; }
+}
+@media (min-width: 901px) and (max-width: 1199px) {
+  .p-home .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -242px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-391 260 L-337 260 L-112 260 L110 260 L323 260 L377 260'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -329px; --y: 176px; --s: 96px; --t: 7.6s; animation-delay: -3.26s; }
+  .p-home .fx .node.n2 { --x: -100px; --y: 162px; --s: 96px; --t: 7.6s; animation-delay: -1.04s; }
+  .p-home .fx .node.n3 { --x: 108px; --y: 168px; --s: 96px; --t: 7.6s; animation-delay: 1.16s; }
+  .p-home .fx .node.n4 { --x: 348px; --y: 157px; --s: 96px; --t: 7.6s; animation-delay: 3.26s; }
+  .p-research .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-research .fx .g1 { --x: -393px; --y: 225px; --s: 52px; }
+  .p-research .fx .g2 { --x: -278px; --y: 224px; --s: 48px; }
+  .p-research .fx .g3 { --x: 270px; --y: 203px; --s: 52px; }
+  .p-publications .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -315px; --y: 238px; width: 139px; height: 26px; margin: -13px 0 0 -70px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 264px; --y: 153px; --s: 46px; }
+  .p-publications .fx .g3 { --x: 352px; --y: 227px; --s: 62px; }
+  .p-datasets .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: -383px; --y: 158px; --s: 66px; }
+  .p-datasets .fx .g2 { --x: 418px; --y: 174px; --s: 44px; }
+  .p-datasets .fx .g3 { --x: 321px; --y: 163px; --s: 76px; }
+  .p-datasets .fx .pulse { offset-path: path('M-342 203 L-290 177 L-383 156'); --t: 4.2s; }
+  .p-cv .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -255px; --y: 229px; --s: 64px; }
+  .p-cv .fx .g2 { --x: 390px; --y: 202px; --s: 50px; }
+  .p-cv .fx .g3 { --x: 291px; --y: 163px; --s: 60px; }
+  .p-service .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-service .fx .g1 { --x: -270px; --y: 240px; --s: 86px; }
+  .p-service .fx .g2 { --x: -236px; --y: 208px; --s: 44px; }
+  .p-service .fx .g3 { --x: 327px; --y: 163px; --s: 66px; }
+  .p-contact .fx .pt.a { --x: -414px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 410px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 273px; --y: 74px; }
+  .p-contact .fx .g1 { --x: 278px; --y: 187px; --s: 90px; }
+  .p-contact .fx .g2 { --x: -244px; --y: 122px; --s: 78px; }
+  .p-contact .fx .g3 { --x: -346px; --y: 184px; --s: 78px; }
+  .p-contact .fx .pulse { offset-path: path('M-321 210 Q-282 100 -244 122'); --t: 4.8s; }
+}
+@media (min-width: 1200px) and (max-width: 1365px) {
+  .p-home .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -324px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-513 260 L-451 260 L-149 260 L148 260 L435 260 L497 260'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -441px; --y: 168px; --s: 110px; --t: 7.6s; animation-delay: -3.33s; }
+  .p-home .fx .node.n2 { --x: -136px; --y: 152px; --s: 110px; --t: 7.6s; animation-delay: -1.06s; }
+  .p-home .fx .node.n3 { --x: 145px; --y: 159px; --s: 110px; --t: 7.6s; animation-delay: 1.17s; }
+  .p-home .fx .node.n4 { --x: 464px; --y: 146px; --s: 110px; --t: 7.6s; animation-delay: 3.33s; }
+  .p-research .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-research .fx .g1 { --x: -516px; --y: 222px; --s: 82px; }
+  .p-research .fx .g2 { --x: -333px; --y: 221px; --s: 74px; }
+  .p-research .fx .g3 { --x: 335px; --y: 194px; --s: 70px; }
+  .p-publications .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -394px; --y: 239px; width: 202px; height: 26px; margin: -13px 0 0 -101px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 354px; --y: 153px; --s: 46px; }
+  .p-publications .fx .g3 { --x: 442px; --y: 227px; --s: 62px; }
+  .p-datasets .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: -498px; --y: 119px; --s: 102px; }
+  .p-datasets .fx .g2 { --x: 555px; --y: 142px; --s: 68px; }
+  .p-datasets .fx .g3 { --x: 400px; --y: 127px; --s: 118px; }
+  .p-datasets .fx .pulse { offset-path: path('M-436 188 L-353 148 L-498 116'); --t: 4.2s; }
+  .p-cv .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -303px; --y: 230px; --s: 98px; }
+  .p-cv .fx .g2 { --x: 494px; --y: 195px; --s: 64px; }
+  .p-cv .fx .g3 { --x: 366px; --y: 145px; --s: 76px; }
+  .p-service .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-service .fx .g1 { --x: -351px; --y: 242px; --s: 96px; }
+  .p-service .fx .g2 { --x: -309px; --y: 206px; --s: 50px; }
+  .p-service .fx .g3 { --x: 416px; --y: 152px; --s: 78px; }
+  .p-contact .fx .pt.a { --x: -564px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 560px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 366px; --y: 74px; }
+  .p-contact .fx .g1 { --x: 335px; --y: 163px; --s: 142px; }
+  .p-contact .fx .g2 { --x: -324px; --y: 111px; --s: 86px; }
+  .p-contact .fx .g3 { --x: -437px; --y: 179px; --s: 86px; }
+  .p-contact .fx .pulse { offset-path: path('M-410 208 Q-367 89 -324 111'); --t: 4.8s; }
+}
+@media (min-width: 1366px) and (max-width: 1599px) {
+  .p-home .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -370px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-576 260 L-514 260 L-170 260 L169 260 L499 260 L561 260'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -504px; --y: 168px; --s: 110px; --t: 7.6s; animation-delay: -3.39s; }
+  .p-home .fx .node.n2 { --x: -157px; --y: 152px; --s: 110px; --t: 7.6s; animation-delay: -1.09s; }
+  .p-home .fx .node.n3 { --x: 166px; --y: 159px; --s: 110px; --t: 7.6s; animation-delay: 1.18s; }
+  .p-home .fx .node.n4 { --x: 528px; --y: 146px; --s: 110px; --t: 7.6s; animation-delay: 3.39s; }
+  .p-research .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-research .fx .g1 { --x: -588px; --y: 222px; --s: 92px; }
+  .p-research .fx .g2 { --x: -383px; --y: 220px; --s: 84px; }
+  .p-research .fx .g3 { --x: 396px; --y: 194px; --s: 70px; }
+  .p-publications .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -455px; --y: 239px; width: 202px; height: 26px; margin: -13px 0 0 -101px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 417px; --y: 153px; --s: 46px; }
+  .p-publications .fx .g3 { --x: 506px; --y: 227px; --s: 62px; }
+  .p-datasets .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: -561px; --y: 119px; --s: 102px; }
+  .p-datasets .fx .g2 { --x: 623px; --y: 140px; --s: 68px; }
+  .p-datasets .fx .g3 { --x: 461px; --y: 124px; --s: 122px; }
+  .p-datasets .fx .pulse { offset-path: path('M-499 188 L-414 148 L-561 115'); --t: 4.2s; }
+  .p-cv .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -366px; --y: 230px; --s: 98px; }
+  .p-cv .fx .g2 { --x: 556px; --y: 195px; --s: 64px; }
+  .p-cv .fx .g3 { --x: 428px; --y: 145px; --s: 76px; }
+  .p-service .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-service .fx .g1 { --x: -413px; --y: 242px; --s: 96px; }
+  .p-service .fx .g2 { --x: -370px; --y: 206px; --s: 50px; }
+  .p-service .fx .g3 { --x: 479px; --y: 152px; --s: 78px; }
+  .p-contact .fx .pt.a { --x: -647px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 643px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 417px; --y: 74px; }
+  .p-contact .fx .g1 { --x: 396px; --y: 162px; --s: 144px; }
+  .p-contact .fx .g2 { --x: -388px; --y: 111px; --s: 86px; }
+  .p-contact .fx .g3 { --x: -499px; --y: 179px; --s: 86px; }
+  .p-contact .fx .pulse { offset-path: path('M-473 208 Q-430 89 -388 111'); --t: 4.8s; }
+}
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .p-home .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -435px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-666 260 L-604 260 L-200 260 L199 260 L589 260 L651 260'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -592px; --y: 168px; --s: 110px; --t: 7.6s; animation-delay: -3.44s; }
+  .p-home .fx .node.n2 { --x: -186px; --y: 152px; --s: 110px; --t: 7.6s; animation-delay: -1.11s; }
+  .p-home .fx .node.n3 { --x: 195px; --y: 159px; --s: 110px; --t: 7.6s; animation-delay: 1.19s; }
+  .p-home .fx .node.n4 { --x: 618px; --y: 146px; --s: 110px; --t: 7.6s; animation-delay: 3.44s; }
+  .p-research .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-research .fx .g1 { --x: -681px; --y: 222px; --s: 96px; }
+  .p-research .fx .g2 { --x: -464px; --y: 219px; --s: 88px; }
+  .p-research .fx .g3 { --x: 482px; --y: 194px; --s: 70px; }
+  .p-publications .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -541px; --y: 239px; width: 202px; height: 26px; margin: -13px 0 0 -101px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 504px; --y: 153px; --s: 46px; }
+  .p-publications .fx .g3 { --x: 594px; --y: 227px; --s: 62px; }
+  .p-datasets .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: -648px; --y: 119px; --s: 102px; }
+  .p-datasets .fx .g2 { --x: 712px; --y: 140px; --s: 68px; }
+  .p-datasets .fx .g3 { --x: 546px; --y: 124px; --s: 122px; }
+  .p-datasets .fx .pulse { offset-path: path('M-588 188 L-500 148 L-648 115'); --t: 4.2s; }
+  .p-cv .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -455px; --y: 230px; --s: 98px; }
+  .p-cv .fx .g2 { --x: 643px; --y: 195px; --s: 64px; }
+  .p-cv .fx .g3 { --x: 514px; --y: 145px; --s: 76px; }
+  .p-service .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-service .fx .g1 { --x: -501px; --y: 242px; --s: 96px; }
+  .p-service .fx .g2 { --x: -454px; --y: 206px; --s: 50px; }
+  .p-service .fx .g3 { --x: 567px; --y: 152px; --s: 78px; }
+  .p-contact .fx .pt.a { --x: -764px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 760px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 490px; --y: 74px; }
+  .p-contact .fx .g1 { --x: 484px; --y: 162px; --s: 144px; }
+  .p-contact .fx .g2 { --x: -476px; --y: 111px; --s: 86px; }
+  .p-contact .fx .g3 { --x: -587px; --y: 179px; --s: 86px; }
+  .p-contact .fx .pulse { offset-path: path('M-560 208 Q-518 89 -476 111'); --t: 4.8s; }
+}
+@media (min-width: 1920px) {
+  .p-home .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-home .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-home .fx .pt.c { --x: -522px; --y: 74px; }
+  .p-home .fx .pulse { offset-path: path('M-789 260 L-727 260 L-241 260 L239 260 L712 260 L774 260'); --t: 7.6s; }
+  .p-home .fx .node.n1 { --x: -712px; --y: 168px; --s: 110px; --t: 7.6s; animation-delay: -3.50s; }
+  .p-home .fx .node.n2 { --x: -226px; --y: 152px; --s: 110px; --t: 7.6s; animation-delay: -1.14s; }
+  .p-home .fx .node.n3 { --x: 235px; --y: 159px; --s: 110px; --t: 7.6s; animation-delay: 1.20s; }
+  .p-home .fx .node.n4 { --x: 741px; --y: 146px; --s: 110px; --t: 7.6s; animation-delay: 3.50s; }
+  .p-research .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-research .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-research .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-research .fx .g1 { --x: -778px; --y: 222px; --s: 96px; }
+  .p-research .fx .g2 { --x: -561px; --y: 219px; --s: 88px; }
+  .p-research .fx .g3 { --x: 578px; --y: 194px; --s: 70px; }
+  .p-publications .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-publications .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-publications .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-publications .fx .g1 { --x: -636px; --y: 239px; width: 202px; height: 26px; margin: -13px 0 0 -101px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(142,227,195,.5) 0%, rgba(142,227,195,.15) 45%, rgba(142,227,195,0) 72%); }
+  .p-publications .fx .g2 { --x: 600px; --y: 153px; --s: 46px; }
+  .p-publications .fx .g3 { --x: 690px; --y: 227px; --s: 62px; }
+  .p-datasets .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-datasets .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-datasets .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-datasets .fx .g1 { --x: -743px; --y: 119px; --s: 102px; }
+  .p-datasets .fx .g2 { --x: 810px; --y: 140px; --s: 68px; }
+  .p-datasets .fx .g3 { --x: 640px; --y: 124px; --s: 122px; }
+  .p-datasets .fx .pulse { offset-path: path('M-685 188 L-594 148 L-743 115'); --t: 4.2s; }
+  .p-cv .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-cv .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-cv .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-cv .fx .g1 { --x: -551px; --y: 230px; --s: 98px; }
+  .p-cv .fx .g2 { --x: 738px; --y: 195px; --s: 64px; }
+  .p-cv .fx .g3 { --x: 608px; --y: 145px; --s: 76px; }
+  .p-service .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-service .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-service .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-service .fx .g1 { --x: -597px; --y: 242px; --s: 96px; }
+  .p-service .fx .g2 { --x: -547px; --y: 206px; --s: 50px; }
+  .p-service .fx .g3 { --x: 663px; --y: 152px; --s: 78px; }
+  .p-contact .fx .pt.a { --x: -924px; --y: 96px; }
+  .p-contact .fx .pt.b { --x: 920px; --y: 84px; }
+  .p-contact .fx .pt.c { --x: 589px; --y: 74px; }
+  .p-contact .fx .g1 { --x: 581px; --y: 162px; --s: 144px; }
+  .p-contact .fx .g2 { --x: -572px; --y: 111px; --s: 86px; }
+  .p-contact .fx .g3 { --x: -682px; --y: 179px; --s: 86px; }
+  .p-contact .fx .pulse { offset-path: path('M-656 208 Q-614 89 -572 111'); --t: 4.8s; }
+}
+@media (max-width: 600px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-publications .fx .g1, .p-publications .fx .g2, .p-datasets .fx .g1, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-service .fx .g1, .p-service .fx .g2, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 601px) and (max-width: 900px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 901px) and (max-width: 1199px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 1200px) and (max-width: 1365px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 1366px) and (max-width: 1599px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 1600px) and (max-width: 1919px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+@media (min-width: 1920px) { .p-home .fx .pulse, .p-home .fx .node.n1, .p-home .fx .node.n2, .p-home .fx .node.n3, .p-home .fx .node.n4, .p-research .fx .g1, .p-research .fx .g2, .p-research .fx .g3, .p-publications .fx .g1, .p-publications .fx .g2, .p-publications .fx .g3, .p-datasets .fx .g1, .p-datasets .fx .g2, .p-datasets .fx .g3, .p-datasets .fx .pulse, .p-cv .fx .g1, .p-cv .fx .g2, .p-cv .fx .g3, .p-service .fx .g1, .p-service .fx .g2, .p-service .fx .g3, .p-contact .fx .g1, .p-contact .fx .g2, .p-contact .fx .g3, .p-contact .fx .pulse { display: block; } }
+.fx .pulse.p2 { display: none; }
+@media (min-width: 901px) { .p-home .fx .pulse.p2 { display: block; } }

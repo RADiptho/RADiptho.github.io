@@ -1,17 +1,17 @@
 # Md. Rakib Ahammed Diptho — academic website
 
-Static, single-file site (`index.html`) for GitHub Pages, with a scheduled GitHub Actions
-job that keeps Google Scholar metrics up to date.
+Static site for GitHub Pages (one scrolling page, seven sections, no build step), with a scheduled
+GitHub Actions job that keeps Google Scholar metrics up to date.
 
 ```
-index.html                       the whole site (styles, scripts and most images inlined)
-banner-fix.css                   page-banner frame, parallax and per-page banner images
-site-reveal-2027.js              scroll-linked banner/image motion
+index.html                       the page: navigation, seven sections (each with its own banner) and the footer
+site.css                         all styles: colour system, navigation, banners, content, form, reveal
+site.js                          behaviour: navigation state, scroll reveal, Home light layer, contact form,
+                                 Google Scholar panel, certificate lightbox
+banners.css                      generated: positions of the banner live effects per breakpoint
+assets/banner-<page>-<variant>.jpg   49 precomposed banner images, one per page and breakpoint (see section 4)
+assets/photo-diptho.jpg, cert-1..5.jpg   portrait and certificate images (external files, not inlined)
 assets/logo.svg (+ png sizes)    the D monogram in the header and the favicon / touch icon
-assets/banner-base.jpg           8000x560 shared desktop stage strip (drawn at the 280px banner height)
-assets/banner-home-wide.jpg      8000x560 Home strip: the AI > ML > DL > Research progression
-assets/banner-<page>-left/right[-s|-m].webp   desktop subject layers (regular, compact, small), transparent WebP
-assets/banner-<page>-narrow.jpg  3400x750 phone / tablet / narrow-desktop strips (drawn at the 250px height)
 data/scholar.json                Google Scholar metrics and records, written by the sync job
 scripts/sync_scholar.py          reads the Scholar profile and updates data/scholar.json
 .github/workflows/scholar-sync.yml   runs the script twice a day (03:23 and 15:41 UTC) and on demand
@@ -45,8 +45,8 @@ mail app):
    cross-origin requests — the page posts the form the ordinary way to
    `https://formsubmit.co/dipthobracu02@gmail.com`, which every browser allows cross-origin.
    FormSubmit then shows its activation notice (first time only) or, once activated, sends
-   the visitor back to `https://radiptho.github.io/?sent=1`, where the page opens Contact and
-   shows the confirmation.
+   the visitor back to `https://radiptho.github.io/?sent=1`, where the page scrolls to the Contact
+   form and shows the confirmation.
 
 Success is reported only after FormSubmit has confirmed it (JSON `success: true`, or the
 `?sent=1` return). Everything else — activation pending, a service error, no connection — is
@@ -114,50 +114,70 @@ Run locally: `pip install requests beautifulsoup4 && python scripts/sync_scholar
 
 ## 4. Banners
 
-All banner imagery is rendered from one scene stage (three.js in headless Chromium): a navy floor, a
-cool key light from the upper left, an emerald rim light and emerald accents, soft particles and the
-same grade. Each page has its own subject: Home — the AI → ML → DL → Research progression (an AI
-core, a data-to-model panel, a deep network and an open paper with a magnifier, on labelled plinths
-joined by a flow line); Research & Expertise — computer vision on a lab monitor with its processor,
-and a microscope with a results panel and notebook; Publications — the supplied book-and-laptop
-photograph as a framed print with manuscripts, and journal volumes with an open paper; Datasets —
-database stacks with a data table, and a cube lattice with charts; CV — profile card, graduation cap
-and medal, and a certificate with an award and folder; Service — an annotated manuscript under
-review with the reviewer's seal and pen, and reviewed manuscripts with journal volumes and a
-magnifier; Contact — an envelope with its letter and a paper plane, and an @ sign with a contact
-card. The heading treatment (white, same shadow), the emerald underline and the navy overlay are
-shared by every page.
+Each of the seven sections opens with a banner: 280px high on desktop, 250px up to 900px wide. The
+banner is **one precomposed image**, chosen by `<picture>` from seven breakpoint variants and drawn
+with `object-fit: cover`, centred, at the banner height:
 
-**Composed for the banner, never cropped by CSS.** Every image is drawn at the banner height
-(`background-size: auto 100%`, attachment `scroll`), was composed for that height with the top 22%
-(the navigation bar) kept quiet, and every subject stands fully inside the frame with a margin.
-Up to 900px, and for Home below 1090px, each page uses one centred strip
-(`assets/banner-<page>-narrow.jpg`). From 901px the desktop banner is composed from three
-background layers: a left subject and a right subject (transparent WebP, anchored 2% from the
-banner edges, so they use the width at any size) over the shared base strip
-(`assets/banner-base.jpg`). Three sizes of the subjects exist — small (`-m`), compact (`-s`) and
-regular — and the breakpoints are per page, chosen so that the subjects always clear the heading
-text and its underline (headings differ in width; "Research & Expertise" is the widest). Between
-901 and 1299px the underline is shortened to 48% of the width for the same reason. Home has no
-heading and uses its own full strip from 1090px. The two scroll scripts move only the vertical
-position of the background (`background-position-y`), so the layers keep their horizontal anchors.
-Banner heights are unchanged: 280px desktop, 250px up to 900px.
+| variant | viewport width | image | composed for |
+|---|---|---|---|
+| `m`   | ≤ 600px        | 1800×750 (600 CSS px wide at 250px) | 350px: everything inside ±165px of the centre |
+| `t`   | 601–900px      | 2700×750 | 601px: inside ±290px |
+| `sm`  | 901–1199px     | 2400×560 (1200 CSS px wide at 280px) | 901px: inside ±440px |
+| `md`  | 1200–1365px    | 2732×560 | 1200px: inside ±590px |
+| `lg`  | 1366–1599px    | 3200×560 | 1366px: inside ±673px |
+| `xl`  | 1600–1919px    | 3840×560 | 1600px: inside ±790px |
+| `xxl` | ≥ 1920px       | 5120×560 | 1920px: inside ±950px (environment continues to 2560px) |
 
-The photograph on the Publications page is drawn at or below its native 740x494 size everywhere
-and was not upscaled or enhanced.
+Because the image is centred and scaled to the banner height only, the position of every object
+relative to the banner centre is fixed in CSS pixels for the whole breakpoint range; a wider
+viewport only reveals more of the environment at the sides. Nothing depends on CSS background
+layers, `background-attachment`, scroll position or JavaScript — the banners are plain images and
+look the same with JavaScript disabled. The heading (white, Oswald, 34–62px) and its emerald→teal
+underline sit in the centre on desktop and at the top on phones/tablets; the compositions were
+fitted to the measured heading and underline rectangles of this page at every breakpoint edge, so
+no object is ever behind the text, behind the navigation bar, cut by the viewport edge or by the
+banner bottom (verified pixel by pixel on the renders and again on the rendered page, see below).
 
-A rendered-page QA pass (Playwright, widths 360–2560, reduced motion included) checks for every
-page that the subjects clear the viewport edges, the navigation zone, the heading text and the
-underline; the sheets for the last run are in the delivery package.
+All imagery is rendered from one three.js stage (headless Chromium): a deep-navy floor with a faint
+grid, a cool key light from the front-left, a teal fill, an emerald rim light, soft particles, the
+same grade and vignette. Subjects: Home — the AI → ML → DL → RESEARCH progression (an AI core, a
+data-to-model panel, a deep network and an open paper with a magnifier on labelled plinths, joined
+by a flow line with chevrons; a data pulse travels along it on the page); Research & Expertise — a
+laptop with training curves, a processor and laboratory flasks (computational science and
+experimentation) and a microscope with a results panel, pen and notebook; Publications — the
+supplied book-and-laptop photograph as a framed print (drawn at or below its native 740×494 size,
+never upscaled, never animated) with manuscripts, and journal volumes with an open paper;
+Datasets — database stacks, a data table, a pipeline, a cube matrix, bar charts and a dashboard;
+CV — profile card, graduation cap, medal, certificate with seal, trophy and folder; Service — an
+annotated manuscript under review with the reviewer's seal and pen, reviewed stacks, journal
+volumes and a magnifier; Contact — an envelope with its letter, a paper plane in flight, an @ sign
+and a contact card.
+
+**Live effects** (`banners.css`, generated from the render coordinates) are small CSS-animated
+glows and pulses on a layer above the image: node glows and the travelling pulse on Home, data
+packets on Datasets, a message in flight on Contact, soft glows on the key objects elsewhere, a slow
+light sweep and a few drifting motes. On desktop with a mouse the Home light layer drifts a few
+pixels with the pointer; the image never moves. `prefers-reduced-motion` switches the whole layer
+off and shows every section at once.
+
+**QA.** A Playwright pass over the rendered page (widths 360, 390, 430, 600, 601, 768, 820, 900,
+901, 1024, 1100, 1200, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2560) checks for every section
+that `<picture>` chose the expected variant, that the measured subject bounds clear the viewport
+edges, the navigation bar, the heading text and the underline, that the navigation state and the
+active link are right, and that nothing overflows; the screenshots and the JavaScript-disabled and
+reduced-motion runs are in the delivery package.
 
 ## 5. Colour system
 
-One palette, defined as CSS custom properties at the top of `index.html`: navy
-(`--navy` #0F2A44, `--navy-2` #163B5E) for headings, the header, panels and links; emerald
-(`--green` #0E8C57, `--green-2` #0B7449, `--green-soft`, `--green-mint` on dark panels) for
-accent bars, buttons, badges, focus rings and hover states; and warm neutrals for text,
-rules and backgrounds. Profile buttons keep the official network icons but use the same
-navy/emerald treatment as every other control; red is reserved for form validation errors.
+One palette, defined as CSS custom properties at the top of `site.css`: deep midnight and navy
+(`--ink` #0A1628, `--navy` #0F2440, `--navy-2` #163558) for the navigation bar, banners, headings
+and dark panels; research blue (`--blue` #1D4F86, `--blue-2` #2A6AB0) for links and glass panels;
+teal and cyan (`--teal` #1B9AAA, `--cyan` #5FD3E6) for blue-teal transitions and data highlights;
+emerald (`--green` #0F9D6E, `--green-2` #0C7F58, `--green-bright`, `--green-mint`, `--green-soft`)
+as the single accent for underlines, markers, buttons, badges, focus rings and hover states; and
+off-white neutrals (`--bg` #F7F9FC, `--surface` #FFFFFF, `--text` #1B2A3B, `--muted` #5A6B80,
+`--rule` #DCE3EC) for the content. The banner underline and the small accent bars use the
+emerald→teal gradient (`--accent-grad`). Red is reserved for form validation errors.
 
 SECURITY NOTE: CV is deliberately NOT included in this public repository. The CV button links to a restricted Google Drive file. Set Drive General access to Restricted and allow downloads for approved viewers.
 
