@@ -18,34 +18,42 @@
   window.__formReturned = /[?&]sent=1(&|$)/.test(location.search);
   if (window.__formReturned) { try { history.replaceState(null, '', location.pathname + '#contact'); } catch (e) { location.hash = '#contact'; } }
 
-  // ---- navigation ------------------------------------------------------------------------------
-  var navH = 62, ticking = false;
+  // ---- navigation: one selected section at a time; original section contents/effects stay untouched ----
+  var navH = 62, ticking = false, currentView = 'home';
   function measure() { navH = nav.offsetHeight || navH; }
   function setActive(id) {
     links.forEach(function (a) { var on = a.getAttribute('data-view') === id; a.classList.toggle('active', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   }
+  function validView(id) {
+    for (var i = 0; i < sections.length; i++) if (sections[i].id === id) return id;
+    return 'home';
+  }
+  function showView(id, keepHash) {
+    id = validView(id);
+    currentView = id;
+    sections.forEach(function (section) {
+      var on = section.id === id;
+      section.hidden = !on;
+      section.setAttribute('aria-hidden', on ? 'false' : 'true');
+    });
+    setActive(id);
+    closeMenu();
+    window.scrollTo(0, 0);
+    if (!keepHash && location.hash !== '#' + id) location.hash = id;
+    request();
+  }
+  function route() { showView((location.hash || '#home').slice(1), true); }
   function update() {
     ticking = false;
     var y = window.scrollY || window.pageYOffset || 0;
-    nav.classList.toggle('scrolled', y > 24);
-    var probe = y + navH + Math.min(160, window.innerHeight * 0.3), cur = sections[0];
-    for (var i = 0; i < sections.length; i++) { if (sections[i].offsetTop <= probe) cur = sections[i]; }
-    if (y + window.innerHeight >= root.scrollHeight - 2) cur = sections[sections.length - 1];
-    if (cur) setActive(cur.id);
+    nav.classList.toggle('scrolled', currentView !== 'home' || y > 24);
+    setActive(currentView);
   }
   function request() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', request, { passive: true });
   window.addEventListener('resize', function () { measure(); request(); }, { passive: true });
-  window.addEventListener('hashchange', request);
-  measure(); update();
-  window.addEventListener('load', function () { measure(); update(); });
-  // A deep link (#research ...) is honoured by the browser before the Scholar panel has loaded; when that panel
-  // then grows the page above the target, put the target back at the top, unless the visitor has already scrolled.
-  var userScrolled = false; ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { window.addEventListener(ev, function () { userScrolled = true; }, { passive: true }); });
-  d.addEventListener('scholar-rendered', function () {
-    var id = (location.hash || '').replace('#', ''); var target = id && d.getElementById(id);
-    if (target && !userScrolled && !window.__formReturned && performance.now() < 8000) { target.scrollIntoView({ block: 'start', behavior: 'instant' }); request(); }
-  });
+  window.addEventListener('hashchange', route);
+  measure();
 
   function closeMenu() { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; }
   menuBtn.addEventListener('click', function () {
@@ -53,8 +61,17 @@
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     menuBtn.textContent = open ? 'Close' : 'Menu';
   });
-  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
+  links.forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('data-view');
+      if (location.hash === '#' + id) { e.preventDefault(); showView(id, true); }
+      else closeMenu();
+    });
+  });
   d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu(); });
+
+  route();
+  window.addEventListener('load', function () { measure(); route(); });
 
   // ---- scroll reveal ----------------------------------------------------------------------------
   (function () {
