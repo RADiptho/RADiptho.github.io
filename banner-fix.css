@@ -6,10 +6,10 @@
   line-height: 1.1 !important;
   font-weight: 600 !important;
 }
-/* White heading on the dark banners; Publications is a light banner and keeps its navy heading (index.html). */
-.banner:not(.home):not(.p-publications) .banner-title h1,
-.banner:not(.home):not(.p-publications) .banner-title h2,
-.banner:not(.home):not(.p-publications) .banner-title .title {
+/* Same heading treatment on every page banner: white, with the same shadow. */
+.banner:not(.home) .banner-title h1,
+.banner:not(.home) .banner-title h2,
+.banner:not(.home) .banner-title .title {
   color: #fff !important;
   text-shadow: 0 2px 12px rgba(0,0,0,.72) !important;
 }
@@ -29,14 +29,10 @@
 html body header#banner.banner.p-research,
 html body #banner.p-research,
 html body .banner.p-research {
-  background-image: linear-gradient(90deg,rgba(0,0,0,.24),rgba(0,0,0,.08)),url("IMG_3282.jpeg") !important;
+  background-image: url("IMG_3282.jpeg") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
-}
-html body .banner.p-research .banner-title h1 {
-  color: #fff !important;
-  text-shadow: 0 2px 12px rgba(0,0,0,.7) !important;
 }
 
 /* site-motion-restored: smooth page transitions and subtle image entrance */
@@ -109,7 +105,7 @@ html body header#banner.banner::after {
 html body header#banner.banner.p-cv,
 html body #banner.banner.p-cv,
 html body .banner.p-cv {
-  background-image: linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,.04)),url("CV_banner_3840x960.jpg") !important;
+  background-image: url("CV_banner_3840x960.jpg") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -138,19 +134,31 @@ html body .banner.p-cv {
 }
 
 /* ------------------------------------------------------------------
-   Publications banner — the user's "documents between two laptops" image
-   (2026-11-06). Same mechanics as Home: desktop parallax mode loads a
-   3840x2160 version (assets/publications-banner-desktop.jpg) whose top band
-   is the wide crop shown in the 280px banner; phones and reduced-motion
-   browsers use the full picture (assets/publications-banner-mobile.jpg,
-   2160x1130) drawn to cover the banner. The banner is light, so index.html
-   gives it the navy heading/menu and a soft white fade behind the menu.
+   Publications banner — the supplied "open book and laptop" photo
+   (740x494), used at its native resolution; nothing is upscaled.
+   Phones and reduced-motion browsers draw the photo itself
+   (assets/publications-banner.png) to cover the banner, which only ever
+   scales it down. Desktop parallax mode (background-attachment: fixed,
+   where the browser sizes the background against the viewport) loads a
+   1920x1080 canvas holding the photo pixel-for-pixel on a navy field with
+   feathered edges (assets/publications-banner-desktop.png), so it is drawn
+   1:1 on a 1080p screen and scaled down on smaller ones. The shared navy
+   overlay and white heading apply here like on every other page.
    ------------------------------------------------------------------ */
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
   html body header#banner.banner.p-publications {
-    background-image: url("assets/publications-banner-desktop.jpg?v=20261106") !important;
+    background-image: url("assets/publications-banner-desktop.png?v=20261106c") !important;
     background-size: cover !important;
     background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
+  /* no parallax: the same canvas drawn 1:1 from its top edge, so the banner looks identical */
+  html body header#banner.banner.p-publications {
+    background-image: url("assets/publications-banner-desktop.png?v=20261106c") !important;
+    background-size: 1920px auto !important;
+    background-position: center top !important;
     background-repeat: no-repeat !important;
   }
 }
