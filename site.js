@@ -18,42 +18,34 @@
   window.__formReturned = /[?&]sent=1(&|$)/.test(location.search);
   if (window.__formReturned) { try { history.replaceState(null, '', location.pathname + '#contact'); } catch (e) { location.hash = '#contact'; } }
 
-  // ---- navigation: one selected section at a time; original section contents/effects stay untouched ----
-  var navH = 62, ticking = false, currentView = 'home';
+  // ---- navigation ------------------------------------------------------------------------------
+  var navH = 62, ticking = false;
   function measure() { navH = nav.offsetHeight || navH; }
   function setActive(id) {
     links.forEach(function (a) { var on = a.getAttribute('data-view') === id; a.classList.toggle('active', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   }
-  function validView(id) {
-    for (var i = 0; i < sections.length; i++) if (sections[i].id === id) return id;
-    return 'home';
-  }
-  function showView(id, keepHash) {
-    id = validView(id);
-    currentView = id;
-    sections.forEach(function (section) {
-      var on = section.id === id;
-      section.hidden = !on;
-      section.setAttribute('aria-hidden', on ? 'false' : 'true');
-    });
-    setActive(id);
-    closeMenu();
-    window.scrollTo(0, 0);
-    if (!keepHash && location.hash !== '#' + id) location.hash = id;
-    request();
-  }
-  function route() { showView((location.hash || '#home').slice(1), true); }
   function update() {
     ticking = false;
     var y = window.scrollY || window.pageYOffset || 0;
-    nav.classList.toggle('scrolled', currentView !== 'home' || y > 24);
-    setActive(currentView);
+    nav.classList.toggle('scrolled', y > 24);
+    var probe = y + navH + Math.min(160, window.innerHeight * 0.3), cur = sections[0];
+    for (var i = 0; i < sections.length; i++) { if (sections[i].offsetTop <= probe) cur = sections[i]; }
+    if (y + window.innerHeight >= root.scrollHeight - 2) cur = sections[sections.length - 1];
+    if (cur) setActive(cur.id);
   }
   function request() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', request, { passive: true });
   window.addEventListener('resize', function () { measure(); request(); }, { passive: true });
-  window.addEventListener('hashchange', route);
-  measure();
+  window.addEventListener('hashchange', request);
+  measure(); update();
+  window.addEventListener('load', function () { measure(); update(); });
+  // A deep link (#research ...) is honoured by the browser before the Scholar panel has loaded; when that panel
+  // then grows the page above the target, put the target back at the top, unless the visitor has already scrolled.
+  var userScrolled = false; ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { window.addEventListener(ev, function () { userScrolled = true; }, { passive: true }); });
+  d.addEventListener('scholar-rendered', function () {
+    var id = (location.hash || '').replace('#', ''); var target = id && d.getElementById(id);
+    if (target && !userScrolled && !window.__formReturned && performance.now() < 8000) { target.scrollIntoView({ block: 'start', behavior: 'instant' }); request(); }
+  });
 
   function closeMenu() { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; }
   menuBtn.addEventListener('click', function () {
@@ -61,17 +53,8 @@
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     menuBtn.textContent = open ? 'Close' : 'Menu';
   });
-  links.forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      var id = a.getAttribute('data-view');
-      if (location.hash === '#' + id) { e.preventDefault(); showView(id, true); }
-      else closeMenu();
-    });
-  });
+  links.forEach(function (a) { a.addEventListener('click', closeMenu); });
   d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu(); });
-
-  route();
-  window.addEventListener('load', function () { measure(); route(); });
 
   // ---- scroll reveal ----------------------------------------------------------------------------
   (function () {
@@ -117,40 +100,11 @@
     var fields = { name: ['cf-name', 'Please enter your full name.'], email: ['cf-email', 'Please enter a valid email address.'], message: ['cf-message', 'Please write a message of at least 20 characters.'] };
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>\"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' }[ch]; }); }
     function setErr(id, msg) { var el = d.getElementById(id), hint = d.getElementById(id + '-err'); el.classList.toggle('invalid', !!msg); el.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (hint) hint.textContent = msg || ''; }
-    function validate() {
-      var ok = true, first = null;
-      var name = d.getElementById('cf-name'), email = d.getElementById('cf-email'), msg = d.getElementById('cf-message');
-      if (!name.value.trim()) { setErr('cf-name', fields.name[1]); ok = false; first = first || name; } else setErr('cf-name', '');
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email.value.trim())) { setErr('cf-email', fields.email[1]); ok = false; first = first || email; } else setErr('cf-email', '');
-      if (msg.value.trim().length < 20) { setErr('cf-message', fields.message[1]); ok = false; first = first || msg; } else setErr('cf-message', '');
-      if (first) first.focus(); return ok;
-    }
-    ['cf-name', 'cf-email', 'cf-message'].forEach(function (id) { d.getElementById(id).addEventListener('input', function () { if (this.classList.contains('invalid')) validate(); }); });
+    function validate() { var ok = true, first = null, name = d.getElementById('cf-name'), email = d.getElementById('cf-email'), msg = d.getElementById('cf-message'); if (!name.value.trim()) { setErr('cf-name', fields.name[1]); ok = false; first = first || name; } else setErr('cf-name', ''); if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email.value.trim())) { setErr('cf-email', fields.email[1]); ok = false; first = first || email; } else setErr('cf-email', ''); if (msg.value.trim().length < 20) { setErr('cf-message', fields.message[1]); ok = false; first = first || msg; } else setErr('cf-message', ''); if (first) first.focus(); return ok; }
+    ['cf-name','cf-email','cf-message'].forEach(function(id){ d.getElementById(id).addEventListener('input',function(){ if(this.classList.contains('invalid')) validate(); }); });
     function show(kind, html) { status.hidden = false; status.className = 'status ' + kind; status.innerHTML = html; status.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); }
-    function busy(on) { sending = on; btn.disabled = on; btn.setAttribute('aria-busy', on ? 'true' : 'false'); label.textContent = on ? 'Sending…' : 'Send Message'; if (on) { icon.hidden = true; if (!btn.querySelector('.spin')) { var sp = d.createElement('span'); sp.className = 'spin'; sp.setAttribute('aria-hidden', 'true'); btn.insertBefore(sp, label); } } else { icon.hidden = false; var s = btn.querySelector('.spin'); if (s) s.remove(); } }
-    form.addEventListener('submit', function (e) {
-      e.preventDefault(); if (sending) return; status.hidden = true; if (!validate()) return;
-      if (form.elements._honey && form.elements._honey.value) { form.reset(); show('ok', 'Thank you. Your message has been received.'); return; }
-      if (Date.now() - openedAt < 3000) { show('err', 'That was quick. Please check your message and click Send Message again.'); openedAt = Date.now() - 3000; return; }
-      var replyTo = d.getElementById('cf-email').value.trim();
-      var payload = { name: d.getElementById('cf-name').value.trim(), email: replyTo, institution: (d.getElementById('cf-institution') || {}).value || '', purpose: (d.getElementById('cf-purpose') || {}).value || '', message: d.getElementById('cf-message').value.trim() };
-      busy(true);
-      var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
-      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 15000) : null;
-      fetch(API, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
-        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (body) { return { ok: r.ok, status: r.status, body: body }; }); })
-        .then(function (res) {
-          if (timer) clearTimeout(timer); busy(false);
-          if (res.ok && res.body && res.body.ok && res.body.stored) {
-            form.reset(); openedAt = Date.now();
-            if (res.body.emailed) show('ok', '<b>Thank you, your message has been sent.</b> I will reply to <b>' + esc(replyTo) + '</b> as soon as I can.');
-            else show('ok', '<b>Thank you, your message has been securely received.</b> It has been saved and I will review it as soon as possible.');
-            return;
-          }
-          show('err', 'Sorry, the message could not be received. Please try again.');
-        })
-        .catch(function () { if (timer) clearTimeout(timer); busy(false); show('err', 'Sorry, the connection timed out. Please try again.'); });
-    });
+    function busy(on) { sending = on; btn.disabled = on; btn.setAttribute('aria-busy', on ? 'true' : 'false'); label.textContent = on ? 'Sending…' : 'Send Message'; if (on) { icon.hidden = true; if (!btn.querySelector('.spin')) { var sp=d.createElement('span'); sp.className='spin'; sp.setAttribute('aria-hidden','true'); btn.insertBefore(sp,label); } } else { icon.hidden=false; var s=btn.querySelector('.spin'); if(s)s.remove(); } }
+    form.addEventListener('submit', function(e){ e.preventDefault(); if(sending)return; status.hidden=true; if(!validate())return; if(form.elements._honey && form.elements._honey.value){ form.reset(); show('ok','Thank you. Your message has been received.'); return; } if(Date.now()-openedAt<3000){ show('err','That was quick. Please check your message and click Send Message again.'); openedAt=Date.now()-3000; return; } var replyTo=d.getElementById('cf-email').value.trim(); var payload={name:d.getElementById('cf-name').value.trim(),email:replyTo,institution:(d.getElementById('cf-institution')||{}).value||'',purpose:(d.getElementById('cf-purpose')||{}).value||'',message:d.getElementById('cf-message').value.trim()}; busy(true); var ctrl=typeof AbortController==='function'?new AbortController():null; var timer=ctrl?setTimeout(function(){ctrl.abort();},15000):null; fetch(API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined}).then(function(r){return r.json().catch(function(){return {};}).then(function(body){return {ok:r.ok,body:body};});}).then(function(res){if(timer)clearTimeout(timer);busy(false);if(res.ok&&res.body&&res.body.ok&&res.body.stored){form.reset();openedAt=Date.now();if(res.body.emailed)show('ok','<b>Thank you, your message has been sent.</b> I will reply to <b>'+esc(replyTo)+'</b> as soon as I can.');else show('ok','<b>Thank you, your message has been securely received.</b> It has been saved and I will review it as soon as possible.');return;}show('err','Sorry, the message could not be received. Please try again.');}).catch(function(){if(timer)clearTimeout(timer);busy(false);show('err','Sorry, the connection timed out. Please try again.');}); });
   })();
 
   // ---- Google Scholar tracker: reads data/scholar.json, which the scheduled GitHub Actions job
