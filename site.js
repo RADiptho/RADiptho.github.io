@@ -108,83 +108,48 @@
     banner.addEventListener('pointerleave', function () { tx = 0; ty = 0; if (!raf) raf = requestAnimationFrame(step); });
   })();
 
-  // ---- collaboration form — delivered by FormSubmit (https://formsubmit.co) to the address in the form's action.
-  // Two delivery paths, both real submissions from this page (no mail app):
-  //  1. AJAX: POST JSON to https://formsubmit.co/ajax/<address> exactly as FormSubmit documents; the visitor
-  //     stays on the page and the result is reported from FormSubmit's JSON answer.
-  //  2. If the browser cannot complete that request (FormSubmit answers without CORS headers until the
-  //     address has been activated, and some networks block cross-origin XHR), the form is posted the
-  //     normal way to https://formsubmit.co/<address>, which every browser allows cross-origin; FormSubmit
-  //     then shows its activation notice (first time only) or sends the visitor back here with ?sent=1.
-  // Success is only ever reported after FormSubmit has confirmed it (JSON success, or the ?sent=1 return).
+  // ---- collaboration form — Cloudflare Worker + D1 + Resend ---------------------------------
   (function () {
     var form = d.getElementById('collabForm'); if (!form) return;
     var status = d.getElementById('cf-status'), btn = d.getElementById('cf-send'), label = btn.querySelector('span'), icon = btn.querySelector('svg');
-    var FALLBACK = 'dipthobracu02@gmail.com';
-    var NATIVE = form.getAttribute('action') || ('https://formsubmit.co/' + FALLBACK);
-    var AJAX = NATIVE.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+    var API = 'https://radiptho-contact.dipthobracucse.workers.dev/';
     var openedAt = Date.now(), sending = false;
     var fields = { name: ['cf-name', 'Please enter your full name.'], email: ['cf-email', 'Please enter a valid email address.'], message: ['cf-message', 'Please write a message of at least 20 characters.'] };
-    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-    function mail() { return '<a href="mailto:' + FALLBACK + '">' + FALLBACK + '</a>'; }
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>\"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' }[ch]; }); }
     function setErr(id, msg) { var el = d.getElementById(id), hint = d.getElementById(id + '-err'); el.classList.toggle('invalid', !!msg); el.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (hint) hint.textContent = msg || ''; }
     function validate() {
       var ok = true, first = null;
       var name = d.getElementById('cf-name'), email = d.getElementById('cf-email'), msg = d.getElementById('cf-message');
       if (!name.value.trim()) { setErr('cf-name', fields.name[1]); ok = false; first = first || name; } else setErr('cf-name', '');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())) { setErr('cf-email', fields.email[1]); ok = false; first = first || email; } else setErr('cf-email', '');
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email.value.trim())) { setErr('cf-email', fields.email[1]); ok = false; first = first || email; } else setErr('cf-email', '');
       if (msg.value.trim().length < 20) { setErr('cf-message', fields.message[1]); ok = false; first = first || msg; } else setErr('cf-message', '');
-      if (first) first.focus();
-      return ok;
+      if (first) first.focus(); return ok;
     }
     ['cf-name', 'cf-email', 'cf-message'].forEach(function (id) { d.getElementById(id).addEventListener('input', function () { if (this.classList.contains('invalid')) validate(); }); });
     function show(kind, html) { status.hidden = false; status.className = 'status ' + kind; status.innerHTML = html; status.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); }
-    function busy(on, text) { sending = on; btn.disabled = on; btn.setAttribute('aria-busy', on ? 'true' : 'false'); label.textContent = on ? (text || 'Sending…') : 'Send Message'; if (on) { icon.hidden = true; if (!btn.querySelector('.spin')) { var sp = d.createElement('span'); sp.className = 'spin'; sp.setAttribute('aria-hidden', 'true'); btn.insertBefore(sp, label); } } else { icon.hidden = false; var s = btn.querySelector('.spin'); if (s) s.remove(); } }
-    // the return address FormSubmit sends the visitor back to after a normal submission (must be absolute)
-    d.getElementById('cf-next').value = location.origin + location.pathname + '?sent=1';
-    if (window.__formReturned) {
-      show('ok', '<b>Thank you, your message has been submitted.</b> I will reply by email as soon as I can.');
-      // bring the confirmation into view now and again once the Scholar panel has changed the page height
-      var toStatus = function () { try { status.scrollIntoView({ block: 'center', behavior: 'instant' }); } catch (e) { status.scrollIntoView(); } };
-      toStatus(); window.addEventListener('load', toStatus); d.addEventListener('scholar-rendered', toStatus); setTimeout(toStatus, 1500);
-    }
+    function busy(on) { sending = on; btn.disabled = on; btn.setAttribute('aria-busy', on ? 'true' : 'false'); label.textContent = on ? 'Sending…' : 'Send Message'; if (on) { icon.hidden = true; if (!btn.querySelector('.spin')) { var sp = d.createElement('span'); sp.className = 'spin'; sp.setAttribute('aria-hidden', 'true'); btn.insertBefore(sp, label); } } else { icon.hidden = false; var s = btn.querySelector('.spin'); if (s) s.remove(); } }
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (sending) return; // one submission at a time
-      status.hidden = true;
-      if (!validate()) return;
-      if (form.elements._honey.value) { show('ok', 'Thank you. Your message has been received.'); form.reset(); return; } // honeypot filled: a bot; send nothing
+      e.preventDefault(); if (sending) return; status.hidden = true; if (!validate()) return;
+      if (form.elements._honey && form.elements._honey.value) { form.reset(); show('ok', 'Thank you. Your message has been received.'); return; }
       if (Date.now() - openedAt < 3000) { show('err', 'That was quick. Please check your message and click Send Message again.'); openedAt = Date.now() - 3000; return; }
       var replyTo = d.getElementById('cf-email').value.trim();
-      var purpose = d.getElementById('cf-purpose').value;
-      d.getElementById('cf-subject').value = (purpose || 'Research collaboration') + ' — enquiry from the website';
-      d.getElementById('cf-replyto').value = replyTo;
-      var payload = {};
-      Array.prototype.forEach.call(form.elements, function (el) { if (el.name && el.name !== '_next') payload[el.name] = el.value; });
+      var payload = { name: d.getElementById('cf-name').value.trim(), email: replyTo, institution: (d.getElementById('cf-institution') || {}).value || '', purpose: (d.getElementById('cf-purpose') || {}).value || '', message: d.getElementById('cf-message').value.trim() };
       busy(true);
       var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
       var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 15000) : null;
-      fetch(AJAX, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
-        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j || {}, json: true }; }, function () { return { ok: r.ok, status: r.status, body: {}, json: false }; }); })
+      fetch(API, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (body) { return { ok: r.ok, status: r.status, body: body }; }); })
         .then(function (res) {
-          if (timer) clearTimeout(timer);
-          var b = res.body, msg = String(b.message || b.error || '');
-          var delivered = res.ok && (b.success === true || b.success === 'true');
-          if (delivered) { form.reset(); openedAt = Date.now(); busy(false); show('ok', '<b>Thank you, your message has been sent.</b> I will reply to <b>' + esc(replyTo) + '</b> as soon as I can.'); return; }
-          if (!res.json) { throw new Error('non-JSON answer (HTTP ' + res.status + ')'); } // not FormSubmit's JSON (e.g. a challenge page): use the normal submission instead
-          if (/activat/i.test(msg)) { busy(false); show('err', 'Your message was not delivered: the form service is still waiting for a one-time activation by the site owner. Please email me directly at ' + mail() + ' for now.'); return; }
-          busy(false); show('err', 'Sorry, the message could not be sent' + (msg ? ' (' + esc(msg) + ')' : '') + '. You can email me directly at ' + mail() + '.');
+          if (timer) clearTimeout(timer); busy(false);
+          if (res.ok && res.body && res.body.ok && res.body.stored) {
+            form.reset(); openedAt = Date.now();
+            if (res.body.emailed) show('ok', '<b>Thank you, your message has been sent.</b> I will reply to <b>' + esc(replyTo) + '</b> as soon as I can.');
+            else show('ok', '<b>Thank you, your message has been securely received.</b> It has been saved and I will review it as soon as possible.');
+            return;
+          }
+          show('err', 'Sorry, the message could not be received. Please try again.');
         })
-        .catch(function (err) {
-          if (timer) clearTimeout(timer);
-          // The browser could not complete the background request (no CORS answer, blocked request, or no
-          // network). Nothing has been sent yet. If we are online, post the form the normal way instead:
-          // the browser itself delivers it to FormSubmit and comes back here with ?sent=1 when accepted.
-          if (navigator.onLine === false) { busy(false); show('err', 'Sorry, the message could not be sent: you appear to be offline. Please try again when you are connected, or email me directly at ' + mail() + '.'); return; }
-          try { console.warn('Contact form: background request failed (' + (err && err.name) + '), submitting the form directly instead.'); } catch (e2) {}
-          busy(true, 'Submitting…');
-          form.submit();
-        });
+        .catch(function () { if (timer) clearTimeout(timer); busy(false); show('err', 'Sorry, the connection timed out. Please try again.'); });
     });
   })();
 
