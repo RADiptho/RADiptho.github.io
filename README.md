@@ -7,6 +7,7 @@ job that keeps Google Scholar metrics up to date.
 index.html                       the whole site (styles, scripts and most images inlined)
 banner-fix.css                   page-banner frame, parallax and per-page banner images
 site-reveal-2027.js              scroll-linked banner/image motion
+assets/logo.svg (+ png sizes)    the D monogram in the header and the favicon / touch icon
 assets/home-banner-desktop.jpg   3840x2160 Home banner used in desktop parallax mode
 assets/publications-banner-desktop.jpg, -mobile.jpg   Publications banner (desktop parallax canvas / full picture)
 IMG_3282.jpeg, CV_banner_3840x960.jpg   Research and CV banners
@@ -101,6 +102,15 @@ band) for desktop parallax mode and `assets/publications-banner-mobile.jpg` (216
 whole picture) elsewhere. Both were produced from the supplied 1080x565 image with EDSR x4
 super-resolution only (no content changes). Because the picture is light, the Publications
 view uses the site's light banner treatment (navy heading and menu).
+
+## 5. Colour system
+
+One palette, defined as CSS custom properties at the top of `index.html`: navy
+(`--navy` #0F2A44, `--navy-2` #163B5E) for headings, the header, panels and links; emerald
+(`--green` #0E8C57, `--green-2` #0B7449, `--green-soft`, `--green-mint` on dark panels) for
+accent bars, buttons, badges, focus rings and hover states; and warm neutrals for text,
+rules and backgrounds. Profile buttons keep the official network icons but use the same
+navy/emerald treatment as every other control; red is reserved for form validation errors.
 
 SECURITY NOTE: CV is deliberately NOT included in this public repository. The CV button links to a restricted Google Drive file. Set Drive General access to Restricted and allow downloads for approved viewers.
 

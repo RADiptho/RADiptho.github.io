@@ -154,14 +154,3 @@ html body .banner.p-cv {
     background-repeat: no-repeat !important;
   }
 }
-
-/* Final Home rendering: preserve 280/250px dimensions; avoid competing fixed-background rasterization. */
-html body header#banner.banner.home,
-html body header#banner.banner.p-home {
-  background-attachment: scroll !important;
-  background-size: auto 100% !important;
-  background-position: center center !important;
-  filter: none !important;
-  transform: none !important;
-  will-change: background-position;
-}
