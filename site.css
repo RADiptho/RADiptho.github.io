@@ -363,34 +363,3 @@ main small, section small, main .muted, section .muted { font-size: 12px !import
 /* the banner headings are not body typography: restated after the compact rules so they keep their size */
 main .banner-title .banner-h, section .banner-title .banner-h { font-size: clamp(34px, 3.9vw, 62px) !important; line-height: 1.15 !important; }
 @media (max-width: 900px) { main .banner-title .banner-h, section .banner-title .banner-h { font-size: min(34px, 9.7vw) !important; } }
-
-
-/* HOME_DESKTOP_RESTORE_FINAL — restore the larger original Home presentation only */
-@media (min-width: 861px) {
-  #home .page { padding-block: 28px 36px !important; }
-  #home .home-grid,
-  .view.home .home-grid {
-    grid-template-columns: 300px minmax(0, 1fr) !important;
-    column-gap: 40px !important;
-    row-gap: 16px !important;
-    align-items: start !important;
-  }
-  #home .home-grid img.photo,
-  .view.home .home-grid img.photo {
-    width: 300px !important;
-    max-width: 300px !important;
-    height: auto !important;
-    max-height: none !important;
-    object-fit: contain !important;
-    justify-self: start !important;
-  }
-  #home .home-grid .about p {
-    font-size: 14px !important;
-    line-height: 1.55 !important;
-    margin: 0 0 10px !important;
-  }
-  #home .home-grid .about h2 {
-    font-size: clamp(1.5rem, 3.2vh, 2.1rem) !important;
-    margin-bottom: 8px !important;
-  }
-}
