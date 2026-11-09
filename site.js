@@ -151,6 +151,13 @@
       function tile(lab, v) { if (!v || v.all == null) return ''; return '<div class="metric"><b>' + esc(v.all) + '</b><span>' + lab + '</span>' + (v.recent != null ? '<small>' + esc(v.recent) + ' ' + esc(since) + '</small>' : '') + '</div>'; }
       var pubs = data.publication_count != null ? data.publication_count : (data.publications || []).length;
       body.innerHTML = '<div class="metric"><b>' + esc(pubs) + '</b><span>Publications</span><small>indexed by Scholar</small></div>' + tile('Citations', m.citations) + tile('h-index', m.h_index) + tile('i10-index', m.i10_index);
+      // Scholar cards are created after the page-wide reveal scan; give only these
+      // dynamically inserted Publications cards the same live entrance treatment.
+      if (!reduce) Array.prototype.forEach.call(body.querySelectorAll('.metric'), function (el, i) {
+        el.classList.add('rv');
+        el.style.setProperty('--d', (Math.min(i, 7) * 70) + 'ms');
+        requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('in'); }); });
+      });
       var f = GS + '<span class="src">Google Scholar</span>';
       f += '<span>Last updated: <b>' + (ok || 'n/a') + '</b> (scheduled sync, not live)</span>';
       if (data.status === 'blocked' || data.status === 'failed') f += '<span class="warn">Latest check' + (att ? ' on ' + att : '') + ' was blocked by Google Scholar; showing the last verified values.</span>';
