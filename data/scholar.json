@@ -7,8 +7,8 @@
   },
   "metrics": {
     "citations": {
-      "all": 24,
-      "recent": 24
+      "all": 26,
+      "recent": 26
     },
     "h_index": {
       "all": 3,
@@ -42,7 +42,7 @@
       "authors": "RA Diptho, P Ghosh, SH Chowdhury, S Basak",
       "venue": "NDT 4 (3), 28",
       "year": 2026,
-      "citations": null,
+      "citations": 1,
       "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:roLk4NBRz8UC"
     },
     {
@@ -58,7 +58,7 @@
       "authors": "RA Diptho, SH Chowdhury, MAA Mamun, MS Hosen, MS Rahman, ...",
       "venue": "Technologies 14 (7), 430",
       "year": 2026,
-      "citations": 3,
+      "citations": 4,
       "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=SSoTLJoAAAAJ&pagesize=100&sortby=pubdate&citation_for_view=SSoTLJoAAAAJ:WF5omc3nYNoC"
     },
     {
@@ -127,9 +127,9 @@
     }
   ],
   "publication_count": 13,
-  "last_success": "2026-11-04T09:13:27Z",
-  "last_attempt": "2026-11-08T19:56:59Z",
-  "status": "blocked",
-  "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
-  "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule (twice a day, retried on blocks); not real-time data"
+  "last_success": "2026-11-09T05:47:00Z",
+  "last_attempt": "2026-11-09T05:47:00Z",
+  "status": "verified_manual",
+  "error": null,
+  "source": "Google Scholar profile; values manually verified from the author's Scholar profile screenshot on 9 Nov 2026 after automated requests were blocked. Scheduled sync remains enabled."
 }
