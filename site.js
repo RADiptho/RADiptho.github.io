@@ -113,6 +113,17 @@
     banner.addEventListener('pointerleave', function () { tx = 0; ty = 0; if (!raf) raf = requestAnimationFrame(step); });
   })();
 
+  // ---- Publications banner: restore its live pointer drift without affecting other views ----
+  (function () {
+    if (reduce || !window.matchMedia || !window.matchMedia('(pointer: fine)').matches) return;
+    var banner = d.querySelector('#publications .banner'), fx = banner && banner.querySelector('.fx');
+    if (!fx) return;
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    function step() { raf = 0; cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12; fx.style.transform = 'translate3d(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px,0)'; if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) raf = requestAnimationFrame(step); }
+    banner.addEventListener('pointermove', function (e) { var r = banner.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width - 0.5) * 8; ty = ((e.clientY - r.top) / r.height - 0.5) * 5; if (!raf) raf = requestAnimationFrame(step); });
+    banner.addEventListener('pointerleave', function () { tx = 0; ty = 0; if (!raf) raf = requestAnimationFrame(step); });
+  })();
+
   // ---- collaboration form — Cloudflare Worker + D1 + Resend ---------------------------------
   (function () {
     var form = d.getElementById('collabForm'); if (!form) return;
