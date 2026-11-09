@@ -1,13 +1,19 @@
 name: Sync Google Scholar
-# Reads the public Google Scholar profile into data/scholar.json twice a day and commits it.
+# Reads the public Google Scholar profile into data/scholar.json six times a day and commits it.
 # Google Scholar refuses a share of automated requests (HTTP 403 / CAPTCHA). That is expected:
 # the script retries, keeps the last good data with its date, and reports the block as a
 # warning. The job only fails for an unexpected error (changed page markup, I/O problem).
 on:
   workflow_dispatch:
   schedule:
-    - cron: '23 3 * * *'    # 03:23 UTC
-    - cron: '41 15 * * *'   # 15:41 UTC
+    # Six separate runs give Scholar six fresh GitHub runner IPs each day. A blocked
+    # run keeps the last verified data; the next scheduled runner tries again.
+    - cron: '17 1 * * *'
+    - cron: '43 5 * * *'
+    - cron: '11 9 * * *'
+    - cron: '37 13 * * *'
+    - cron: '7 17 * * *'
+    - cron: '31 21 * * *'
 permissions:
   contents: write
 concurrency:
