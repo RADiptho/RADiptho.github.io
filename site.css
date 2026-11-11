@@ -363,3 +363,97 @@ main small, section small, main .muted, section .muted { font-size: 12px !import
 /* the banner headings are not body typography: restated after the compact rules so they keep their size */
 main .banner-title .banner-h, section .banner-title .banner-h { font-size: clamp(34px, 3.9vw, 62px) !important; line-height: 1.15 !important; }
 @media (max-width: 900px) { main .banner-title .banner-h, section .banner-title .banner-h { font-size: min(34px, 9.7vw) !important; } }
+
+
+/* Academic profile Home — university-expert inspired, original navy/teal identity */
+.home-profile-hero {
+  background: linear-gradient(112deg, #102C4C 0%, #153B5C 58%, #0E665B 100%);
+  color: #fff;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.home-profile-inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 190px minmax(0,1fr);
+  gap: 46px;
+  align-items: center;
+  padding-block: 34px;
+}
+.home-profile-photo {
+  width: 190px;
+  height: 190px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.72);
+  box-shadow: 0 14px 38px rgba(4,18,32,.28);
+}
+.home-profile-copy { min-width: 0; }
+.home-profile-kicker {
+  display: block;
+  font-size: .86rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #A9EAD6;
+  margin-bottom: 8px;
+}
+.home-profile-copy h1 {
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: clamp(2.15rem,4.3vw,4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: .01em;
+  margin: 0 0 14px;
+}
+.home-profile-copy p {
+  color: rgba(255,255,255,.88);
+  font-size: clamp(1rem,1.45vw,1.2rem);
+  line-height: 1.55;
+  margin: 0 0 15px;
+}
+.home-profile-email {
+  color: #fff;
+  font-weight: 700;
+  text-decoration-color: rgba(169,234,214,.7);
+  text-underline-offset: 4px;
+}
+.home-profile-email:hover { color: #A9EAD6; }
+.home-tabs { background: #F4F7FA; border-bottom: 1px solid var(--rule); }
+.home-tabs .wrap { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); }
+.home-tabs a {
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  color: var(--navy);
+  text-decoration: none;
+  font-weight: 650;
+  border-right: 1px solid var(--rule);
+  border-top: 3px solid transparent;
+  transition: background .18s ease,color .18s ease,border-color .18s ease;
+}
+.home-tabs a:first-child { border-left: 1px solid var(--rule); }
+.home-tabs a:hover,.home-tabs a:focus-visible { background: #fff; color: var(--green-2); }
+.home-tabs a.active { background: #fff; color: var(--green-2); border-top-color: var(--green); }
+#home .home-grid { grid-template-columns: 230px minmax(0,1fr); }
+#home .home-grid .links { margin-top: 0; }
+@media (max-width: 860px) {
+  .home-profile-hero { min-height: 0; }
+  .home-profile-inner { grid-template-columns: 128px minmax(0,1fr); gap: 24px; padding-block: 28px; }
+  .home-profile-photo { width: 128px; height: 128px; }
+  .home-tabs { overflow-x: auto; }
+  .home-tabs .wrap { width: max-content; min-width: 100%; grid-template-columns: repeat(7,minmax(108px,1fr)); padding-inline: 0; }
+  .home-tabs a { min-height: 52px; padding-inline: 14px; }
+  #home .home-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .home-profile-inner { grid-template-columns: 96px minmax(0,1fr); gap: 18px; padding-block: 24px; }
+  .home-profile-photo { width: 96px; height: 96px; }
+  .home-profile-copy h1 { font-size: clamp(1.65rem,8vw,2.35rem); }
+  .home-profile-copy p { font-size: .9rem; }
+  .home-profile-kicker { font-size: .7rem; }
+}
