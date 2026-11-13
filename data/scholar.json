@@ -136,8 +136,8 @@
   ],
   "publication_count": 14,
   "last_success": "2026-11-10T16:59:19Z",
-  "last_attempt": "2026-11-13T17:08:53Z",
+  "last_attempt": "2026-11-13T20:39:12Z",
   "status": "blocked",
-  "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
+  "error": "HTTP 429: Google Scholar rate-limited or blocked the request",
   "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule (twice a day, retried on blocks); not real-time data"
 }
