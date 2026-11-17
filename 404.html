@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Page not found | Md. Rakib Ahammed Diptho</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B1422">
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<script>
+// The site is one page with seven views. An address such as /publications is sent to /#publications.
+(function () {
+  var seg = (location.pathname || '').replace(/^\/+|\/+$/g, '').split('/')[0].toLowerCase().replace(/\.html?$/, '');
+  if (['home', 'research', 'publications', 'datasets', 'cv', 'service', 'contact'].indexOf(seg) > -1) location.replace('/#' + seg);
+})();
+</script>
+<link rel="stylesheet" href="/site.css?v=20261123">
+<style>
+  .nf { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 96px var(--side) 64px; background: var(--ink); color: var(--on-ink); text-align: center;
+    background-image: radial-gradient(60% 55% at 12% 8%, rgba(110, 168, 224, .16), transparent 70%), radial-gradient(48% 50% at 92% 78%, rgba(107, 232, 184, .13), transparent 72%); }
+  .nf-inner { display: grid; justify-items: center; gap: 22px; max-width: 720px; }
+  .nf-mark { width: 56px; height: 56px; }
+  .nf-code { font-family: var(--mono); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mint); }
+  .nf h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(3rem, 10vw, 6.4rem); line-height: .95; letter-spacing: -.015em; }
+  .nf h1 em { color: var(--mint); }
+  .nf p { color: var(--on-ink-2); max-width: 46ch; }
+  .nf-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
+  .nf-links a { padding: 8px 16px; border: 1px solid var(--line-ink); border-radius: 999px; font-size: .9rem; font-weight: 550; transition: background-color .25s, color .25s, border-color .25s; }
+  .nf-links a:hover { background: var(--mint); border-color: var(--mint); color: var(--ink); }
+</style>
+</head>
+<body>
+<main class="nf">
+  <div class="nf-inner">
+    <img class="nf-mark" src="/assets/logo.svg" alt="" width="56" height="56">
+    <p class="nf-code">Error 404</p>
+    <h1>Page <em>not found</em></h1>
+    <p>This address does not exist on the site of Md. Rakib Ahammed Diptho. Everything is on the home page.</p>
+    <a class="btn btn-primary" href="/"><span>Go to the home page</span></a>
+    <nav class="nf-links" aria-label="Pages">
+      <a href="/#research">Research</a><a href="/#publications">Publications</a><a href="/#datasets">Datasets</a><a href="/#cv">CV</a><a href="/#service">Service</a><a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</main>
+</body>
+</html>

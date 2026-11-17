@@ -7,8 +7,8 @@
   },
   "metrics": {
     "citations": {
-      "all": 26,
-      "recent": 26
+      "all": 28,
+      "recent": 28
     },
     "h_index": {
       "all": 3,
@@ -18,7 +18,12 @@
       "all": 1,
       "recent": 1
     },
-    "recent_since": 2021
+    "recent_since": 2021,
+    "confirmed": {
+      "date": "2026-11-17",
+      "what": "total citations",
+      "by": "profile owner"
+    }
   },
   "publications": [
     {

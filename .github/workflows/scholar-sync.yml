@@ -1,13 +1,21 @@
 name: Sync Google Scholar
-# Reads the public Google Scholar profile into data/scholar.json six times a day and commits it.
-# Google Scholar refuses a share of automated requests (HTTP 403 / CAPTCHA). That is expected:
-# the script retries, keeps the last good data with its date, and reports the block as a
-# warning. The job only fails for an unexpected error (changed page markup, I/O problem).
+# Six times a day this reads the Google Scholar profile, Crossref and DataCite into data/scholar.json and
+# commits the file when there is something to record. The site reads that file when a page is opened.
+#
+# Google Scholar refuses almost every request from GitHub's servers (HTTP 403 / CAPTCHA). Two ways around
+# an empty-handed run, both optional repository secrets (Settings -> Secrets and variables -> Actions):
+#   SERPAPI_KEY    a free key from serpapi.com: the profile is then read through SerpApi, which is not
+#                  refused. With it the figures on the site are never more than about eight hours old.
+#   SCHOLAR_PROXY  an HTTP(S) proxy URL for the direct request.
+# With neither, the script still asks Google Scholar directly, keeps the last good figures with their date
+# when it is refused, and records the refusal. Crossref and DataCite are open and need nothing.
+# "Run workflow" on the Actions tab reads everything at once, whatever was read before.
+# The job fails only for something that needs attention: a rejected key, changed page markup, an I/O error.
 on:
   workflow_dispatch:
   schedule:
-    # Six separate runs give Scholar six fresh GitHub runner IPs each day. A blocked
-    # run keeps the last verified data; the next scheduled runner tries again.
+    # Six separate runs: with a key, Scholar is read on every second one (three searches a day);
+    # without a key, each run is another chance that a runner is let through.
     - cron: '17 1 * * *'
     - cron: '43 5 * * *'
     - cron: '11 9 * * *'
@@ -30,11 +38,13 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check requests beautifulsoup4
-      - name: Fetch Google Scholar data
+      - name: Read Google Scholar, Crossref and DataCite
         env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           SCHOLAR_PROXY: ${{ secrets.SCHOLAR_PROXY }}
-        run: python scripts/sync_scholar.py --user SSoTLJoAAAAJ --out data/scholar.json --attempts 3
-      - name: Commit refreshed data if changed
+          READ_NOW: ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+        run: python scripts/sync_scholar.py --user SSoTLJoAAAAJ --out data/scholar.json --attempts 3 --message-file "$RUNNER_TEMP/scholar-message.txt" $READ_NOW
+      - name: Commit the data file if it changed
         if: always()
         run: |
           git config user.name "github-actions[bot]"
@@ -43,8 +53,9 @@ jobs:
           if git diff --cached --quiet; then
             echo "data/scholar.json unchanged"
           else
-            status=$(python -c "import json; print(json.load(open('data/scholar.json')).get('status'))")
-            git commit -m "Scholar sync: ${status}"
+            message="Scholar sync"
+            if [ -s "$RUNNER_TEMP/scholar-message.txt" ]; then message=$(head -n 1 "$RUNNER_TEMP/scholar-message.txt"); fi
+            git commit -m "$message"
             git pull --rebase origin main
             git push
           fi
