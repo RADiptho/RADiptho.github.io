@@ -141,8 +141,293 @@
   ],
   "publication_count": 14,
   "last_success": "2026-11-10T16:59:19Z",
-  "last_attempt": "2026-11-17T04:05:46Z",
+  "last_attempt": "2026-11-17T09:15:27Z",
   "status": "blocked",
   "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
-  "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule (twice a day, retried on blocks); not real-time data"
+  "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule; not real-time data",
+  "registry": {
+    "works": [
+      {
+        "doi": "10.1016/j.ijmedinf.2026.106811",
+        "kind": "journal",
+        "title": "Self-report label bias in machine learning screening for undiagnosed diabetes: development, validation and offline on-device deployment of an interpretable HbA1c-anchored tool",
+        "authors": [
+          "Safiul Haque Chowdhury",
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh"
+        ],
+        "me": 1,
+        "container": "International Journal of Medical Informatics",
+        "publisher": "Elsevier",
+        "year": 2026,
+        "date": "2026-11-10",
+        "volume": "224",
+        "pages": "106811",
+        "article": "106811"
+      },
+      {
+        "doi": "10.1007/s44163-026-02574-5",
+        "kind": "journal",
+        "title": "Reliable methane storage screening and inverse design of metal organic frameworks under distribution shift",
+        "authors": [
+          "Safiul Haque Chowdhury",
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh"
+        ],
+        "me": 1,
+        "container": "Discover Artificial Intelligence",
+        "publisher": "Springer Nature",
+        "year": 2026,
+        "date": "2026-10-31",
+        "volume": "6",
+        "issue": "1",
+        "article": "1726"
+      },
+      {
+        "doi": "10.1155/aia/7124711",
+        "kind": "journal",
+        "title": "CNN5Conv2FC: A Resource‐Aware Deep Learning Framework for Real‐Time Mango Leaf Disease Recognition",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Safiul Haque Chowdhury",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "Advances in Agriculture",
+        "publisher": "Wiley",
+        "year": 2026,
+        "date": "2026-10-23",
+        "volume": "2026",
+        "issue": "1",
+        "article": "7124711"
+      },
+      {
+        "doi": "10.1007/s44288-026-00759-0",
+        "kind": "journal",
+        "title": "Physically consistent and spatially conformalized machine learning for trustworthy flood susceptibility mapping of the 2024 Feni flash flood",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Safiul Haque Chowdhury"
+        ],
+        "me": 0,
+        "container": "Discover Geoscience",
+        "publisher": "Springer Nature",
+        "year": 2026,
+        "date": "2026-10-05",
+        "volume": "4",
+        "issue": "1",
+        "article": "390"
+      },
+      {
+        "doi": "10.3390/ndt4030028",
+        "kind": "journal",
+        "title": "Cross-Dataset Evaluation of the Lightweight YOLO Family for Breast Ultrasound Lesion Segmentation: Effects of Preprocessing, Hyperparameter Optimization, and Test-Time Augmentation",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Safiul Haque Chowdhury",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "NDT",
+        "publisher": "MDPI",
+        "year": 2026,
+        "date": "2026-09-16",
+        "volume": "4",
+        "issue": "3",
+        "pages": "28"
+      },
+      {
+        "doi": "10.1109/peccii70991.2026.11661976",
+        "kind": "conference",
+        "title": "A Cross-Modal Transformer with Explainable AI for Multimodal Breast Cancer Detection",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "2026 International Conference on Power, Electronics, Communications, Computing, and Intelligent Infrastructure (PECCII)",
+        "publisher": "IEEE",
+        "year": 2026,
+        "date": "2026-08-27",
+        "pages": "1-6"
+      },
+      {
+        "doi": "10.3390/technologies14070430",
+        "kind": "journal",
+        "title": "Gesture-Based Navigation of Smart Wheelchairs: A Review of Current Trends and Future Directions",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Safiul Haque Chowdhury",
+          "Md Abdullah Al Mamun",
+          "Md. Shakhawat Hosen",
+          "Md. Shamsur Rahman",
+          "Sarnali Basak",
+          "Md Abul Kalam Azad"
+        ],
+        "me": 0,
+        "container": "Technologies",
+        "publisher": "MDPI",
+        "year": 2026,
+        "date": "2026-07-15",
+        "volume": "14",
+        "issue": "7",
+        "pages": "430"
+      },
+      {
+        "doi": "10.1109/raaicon69033.2025.11502351",
+        "kind": "conference",
+        "title": "An Explainable Machine Learning Framework for Crop Production Prediction and Recommendation System in Bangladesh",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "2025 IEEE 4th International Conference on Robotics, Automation, Artificial-Intelligence and Internet-of-Things (RAAICON)",
+        "publisher": "IEEE",
+        "year": 2025,
+        "date": "2026-05-07",
+        "pages": "703-708"
+      },
+      {
+        "doi": "10.1109/iccit68739.2025.11491345",
+        "kind": "conference",
+        "title": "xLSTM-Based Framework for Accurate Rainfall Forecasting Across Bangladesh: A Comparative Analysis with LSTM and GRU",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "2025 28th International Conference on Computer and Information Technology (ICCIT)",
+        "publisher": "IEEE",
+        "year": 2025,
+        "date": "2026-05-06",
+        "pages": "3329-3334"
+      },
+      {
+        "doi": "10.3390/ndt3020011",
+        "kind": "journal",
+        "title": "Enhancing Dermatological Diagnosis Through Medical Image Analysis: How Effective Is YOLO11 Compared to Leading CNN Models?",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "NDT",
+        "publisher": "MDPI",
+        "year": 2025,
+        "date": "2025-05-21",
+        "volume": "3",
+        "issue": "2",
+        "pages": "11"
+      },
+      {
+        "doi": "10.1109/iccit60459.2023.10441010",
+        "kind": "conference",
+        "title": "PCOS Diagnosis with Confluence CNN: A Revolution in Women's Health",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Nusrat Jahan",
+          "Tahsin Istiyaq",
+          "Sifat-E-Sadakin",
+          "Fairuz Anika",
+          "Muhammad Iqbal Hossain"
+        ],
+        "me": 0,
+        "container": "2023 26th International Conference on Computer and Information Technology (ICCIT)",
+        "publisher": "IEEE",
+        "year": 2023,
+        "date": "2024-02-27",
+        "pages": "1-5"
+      }
+    ],
+    "datasets": [
+      {
+        "doi": "10.5281/zenodo.24081261",
+        "dois": [
+          "10.5281/zenodo.24081262"
+        ],
+        "latest": "10.5281/zenodo.24081262",
+        "version": "1",
+        "title": "BD-MetHazard: A Multi-Source Meteorological and Hazard Indicator Dataset for Bangladesh (1981–2025)",
+        "creators": [
+          "Rakib Ahammed Diptho",
+          "Safiul Haque Chowdhury",
+          "Md Abdullah Al Mamun",
+          "Md. Shakhawat Hosen"
+        ],
+        "me": 0,
+        "host": "Zenodo",
+        "year": 2026
+      },
+      {
+        "doi": "10.17632/wj25crzdbm",
+        "dois": [
+          "10.17632/wj25crzdbm.1",
+          "10.17632/wj25crzdbm.2"
+        ],
+        "latest": "10.17632/wj25crzdbm.2",
+        "version": "2",
+        "title": "HandGesture-5G: A Multi-View, Multi-Illumination Smartphone Image Dataset of Five Static Hand Gestures for Robust Computer Vision Research",
+        "creators": [
+          "Rakib Ahammed Diptho",
+          "Safiul Haque Chowdhury",
+          "Md Abdullah Al Mamun",
+          "Md. Shakhawat Hosen",
+          "Md. Shamsur Rahman",
+          "Sarnali Basak",
+          "Md Abul Kalam Azad"
+        ],
+        "me": 0,
+        "host": "Mendeley Data",
+        "year": 2026
+      },
+      {
+        "doi": "10.17632/r32hyd39dj",
+        "dois": [
+          "10.17632/r32hyd39dj.1",
+          "10.17632/r32hyd39dj.2"
+        ],
+        "latest": "10.17632/r32hyd39dj.2",
+        "version": "2",
+        "title": "Event Aligned MODIS Dataset for Mangrove Canopy Response to Tropical Cyclones in the Bay of Bengal",
+        "creators": [
+          "Rakib Ahammed Diptho",
+          "Safiul Haque Chowdhury",
+          "Pial Ghosh"
+        ],
+        "me": 0,
+        "host": "Mendeley Data",
+        "year": 2026
+      },
+      {
+        "doi": "10.17632/2yhkdcw64t",
+        "dois": [
+          "10.17632/2yhkdcw64t.1",
+          "10.17632/2yhkdcw64t.2"
+        ],
+        "latest": "10.17632/2yhkdcw64t.2",
+        "version": "2",
+        "title": "Bangladesh Historical Rainfall and Meteorological Dataset for Future Rainfall Prediction",
+        "creators": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "host": "Mendeley Data",
+        "year": 2026
+      }
+    ],
+    "status": "ok",
+    "error": null,
+    "source": "Crossref (articles, conference papers) and DataCite (datasets): records that carry the author's name, read by scripts/sync_scholar.py",
+    "last_attempt": "2026-11-17T09:15:27Z",
+    "last_success": "2026-11-17T09:15:27Z"
+  }
 }
