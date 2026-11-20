@@ -141,12 +141,30 @@
   ],
   "publication_count": 14,
   "last_success": "2026-11-10T16:59:19Z",
-  "last_attempt": "2026-11-20T08:36:31Z",
+  "last_attempt": "2026-11-20T14:19:58Z",
   "status": "blocked",
   "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
   "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule; not real-time data",
   "registry": {
     "works": [
+      {
+        "doi": "10.1007/s43937-026-00222-8",
+        "kind": "journal",
+        "title": "Predictability of solar irradiance declines with forecast horizon and limits hourly forecasting yet preserves monthly scale photovoltaic energy estimates for industrial rooftop planning in Bangladesh",
+        "authors": [
+          "Rakib Ahammed Diptho",
+          "Pial Ghosh",
+          "Sarnali Basak"
+        ],
+        "me": 0,
+        "container": "Discover Energy",
+        "publisher": "Springer Nature",
+        "year": 2026,
+        "date": "2026-11-20",
+        "volume": "6",
+        "issue": "1",
+        "article": "107"
+      },
       {
         "doi": "10.1016/j.ijmedinf.2026.106811",
         "kind": "journal",
@@ -427,7 +445,7 @@
     "status": "ok",
     "error": null,
     "source": "Crossref (articles, conference papers) and DataCite (datasets): records that carry the author's name, read by scripts/sync_scholar.py",
-    "last_attempt": "2026-11-20T08:36:31Z",
-    "last_success": "2026-11-20T08:36:31Z"
+    "last_attempt": "2026-11-20T14:19:58Z",
+    "last_success": "2026-11-20T14:19:58Z"
   }
 }
