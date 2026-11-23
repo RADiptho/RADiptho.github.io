@@ -22,7 +22,7 @@ assets/portrait-hero.*     the same portrait with its studio backdrop removed: t
 assets/cv-graduation-*.*   the graduation photograph: the stage of the CV view
 assets/front-*.*           paper fronts (upper part of an article's first page): the Publications stage
                            (-560: on the stage; -full: in the viewer)
-assets/cert-1..6.jpg       certificates of the Service view (three of them are also its stage)
+assets/cert-1..7.jpg       certificates of the Service view (three of them are also its stage)
 assets/course-1..6.jpg     course certificates (CV view)
 assets/grain.png           small noise tile laid over the dark stages
 assets/logo.svg (+ png)    the D monogram: header, favicon, touch icon
