@@ -141,7 +141,7 @@
   ],
   "publication_count": 14,
   "last_success": "2026-11-10T16:59:19Z",
-  "last_attempt": "2026-11-23T16:26:35Z",
+  "last_attempt": "2026-11-24T16:20:39Z",
   "status": "blocked",
   "error": "HTTP 403: Google Scholar rate-limited or blocked the request",
   "source": "Google Scholar profile, read by scripts/sync_scholar.py on a GitHub Actions schedule; not real-time data",
@@ -445,7 +445,7 @@
     "status": "ok",
     "error": null,
     "source": "Crossref (articles, conference papers) and DataCite (datasets): records that carry the author's name, read by scripts/sync_scholar.py",
-    "last_attempt": "2026-11-23T16:26:35Z",
-    "last_success": "2026-11-23T16:26:35Z"
+    "last_attempt": "2026-11-24T16:20:39Z",
+    "last_success": "2026-11-24T16:20:39Z"
   }
 }
